@@ -1,10 +1,18 @@
 export type MessageRole = "user" | "assistant";
 
+export type GuardrailAssessment = {
+  source?: string;
+  action?: string;
+  actionReason?: string;
+  error?: string;
+};
+
 export type MessageDetails = {
   tools?: string[];
   latencyMs?: number;
   inputTokens?: number;
   outputTokens?: number;
+  guardrailIntervened?: boolean;
 };
 
 export type ChatMessage = {
@@ -25,6 +33,8 @@ export type SessionMetrics = {
   avgLatencyMs: number;
   lastTool?: string;
   recentTools: string[];
+  lastGuardrailIntervened?: boolean;
+  lastGuardrailAssessments?: GuardrailAssessment[];
 };
 
 export type MenuItem = {

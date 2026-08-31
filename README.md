@@ -150,15 +150,15 @@ cd frontend && yarn dev
 ## Guardrails & safety
 
 
-| Technique                      | Status | Notes                                                          |
-| ------------------------------ | ------ | -------------------------------------------------------------- |
-| Prompt-level topic boundaries  | ✅      | Restaurant scope; no internal system disclosure                |
-| Health / allergy respect       | ✅      | Dietary restrictions treated seriously in prompt rules         |
-| Bedrock Guardrails             | ⬜      | Content filters, denied topics, PII masking via Bedrock API    |
-| Input guardrails (pre-model)   | ⬜      | User message screening before agent invocation                 |
-| Output guardrails (post-model) | ⬜      | Policy filter on assistant response beyond `strip_thinking`    |
-| PII handling in logs           | ⬜      | Redaction or exclusion of guest email/name in application logs |
-| Prompt injection hardening     | ⬜      | Delimiter strategy and injection regression tests              |
+| Technique                      | Status | Notes                                                                                          |
+| ------------------------------ | ------ | ---------------------------------------------------------------------------------------------- |
+| Prompt-level topic boundaries  | ✅      | Restaurant scope; no internal system disclosure                                                |
+| Health / allergy respect       | ✅      | Dietary restrictions treated seriously in prompt rules                                         |
+| Bedrock Guardrails             | ✅      | BedrockModel guardrail config, GetGuardrail API, backstage Guards tab, chat intervention badge |
+| Input guardrails (pre-model)   | ✅      | Shadow `ApplyGuardrail` on user input via Strands hook (observability; model still blocks)     |
+| Output guardrails (post-model) | ⬜      | Policy filter on assistant response beyond `strip_thinking` and Bedrock output guardrails      |
+| PII handling in logs           | ✅      | `redact_pii()` scrubs emails before guardrail debug logs                                       |
+| Prompt injection hardening     | ✅      | Tests menu with guardrail regression prompts (injection, sexual, out-of-context, PII output) |
 
 
 ---

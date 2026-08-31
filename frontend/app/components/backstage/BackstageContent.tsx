@@ -22,7 +22,31 @@ import {
 import { BackstageTab, MenuItem, Reservation, SessionMetrics } from "../../lib/types";
 import { useI18n } from "../../i18n/I18nProvider";
 
-const POLL_INTERVAL_MS = 2500;
+const POLL_INTERVAL_MS = 50000;
+
+type GuardrailConfig = {
+  name?: string;
+  version?: string;
+  status?: string;
+  contentPolicy?: {
+    filters?: Array<{
+      type?: string;
+      inputStrength?: string;
+      outputStrength?: string;
+      inputAction?: string;
+    }>;
+  };
+  topicPolicy?: {
+    topics?: Array<{ name?: string; type?: string }>;
+  };
+  sensitiveInformationPolicy?: {
+    piiEntities?: Array<{
+      type?: string;
+      inputAction?: string;
+      outputAction?: string;
+    }>;
+  };
+};
 
 function BackstageCard({
   title,
@@ -498,33 +522,142 @@ function ObservabilityTab({ metrics }: { metrics: SessionMetrics }) {
   );
 }
 
-function GuardsTab() {
+function GuardsTab({ metrics }: { metrics: SessionMetrics }) {
   const { t } = useI18n();
+  const [config, setConfig] = useState<GuardrailConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  const guardItems = [
-    t.backstage.guardContentFilters,
-    t.backstage.guardDeniedTopics,
-    t.backstage.guardPiiMasking,
-  ];
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadConfig() {
+      try {
+        const response = await fetch("/api/guardrails");
+        if (!response.ok) {
+          if (!cancelled) setError(true);
+          return;
+        }
+        const data = (await response.json()) as { config: GuardrailConfig };
+        if (!cancelled) setConfig(data.config);
+      } catch {
+        if (!cancelled) setError(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void loadConfig();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const contentFilters =
+    config?.contentPolicy?.filters?.map(
+      (filter) =>
+        `${filter.type} (in: ${filter.inputStrength ?? "—"}, out: ${filter.outputStrength ?? "—"}, inAction: ${filter.inputAction ?? "—"})`,
+    ) ?? [];
+
+  const deniedTopics =
+    config?.topicPolicy?.topics?.map(
+      (topic) => `${topic.name} — ${topic.type ?? "DENY"}`,
+    ) ?? [];
+
+  const piiEntities =
+    config?.sensitiveInformationPolicy?.piiEntities?.map(
+      (entity) =>
+        `${entity.type} (in: ${entity.inputAction ?? "—"}, out: ${entity.outputAction ?? "—"})`,
+    ) ?? [];
+
+  const badge = config ? t.backstage.guardsBadgeConfigured : t.backstage.guardsBadge;
+  const note = config
+    ? t.backstage.guardsConfiguredNote
+    : error
+      ? t.backstage.guardsLoadError
+      : loading
+        ? t.backstage.guardsLoading
+        : t.backstage.guardsNote;
 
   return (
-    <BackstageCard title={t.backstage.guardsTitle} badge={t.backstage.guardsBadge}>
+    <BackstageCard title={t.backstage.guardsTitle} badge={badge}>
       <div className="flex items-start gap-3">
         <ShieldAlert
           className="mt-0.5 size-4 shrink-0 text-[var(--wise-green)]"
           aria-hidden
         />
-        <div>
-          <p className="text-sm font-medium leading-6 text-white/55">
-            {t.backstage.guardsNote}
-          </p>
-          <div className="mt-4 space-y-2 font-mono text-xs text-white/40">
-            {guardItems.map((item) => (
-              <p key={item}>
-                • {item}: {t.backstage.guardStatusNotConfigured}
-              </p>
-            ))}
-          </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium leading-6 text-white/55">{note}</p>
+
+          {config && (
+            <div className="mt-4 space-y-4 font-mono text-xs text-white/70">
+              <div>
+                <p className="text-white/40">{config.name}</p>
+                <p className="text-white/55">
+                  v{config.version} · {config.status}
+                </p>
+              </div>
+
+              <div>
+                <p className="mb-2 font-semibold uppercase tracking-wider text-white/40">
+                  {t.backstage.guardContentFilters}
+                </p>
+                {contentFilters.length > 0 ? (
+                  contentFilters.map((item) => <p key={item}>• {item}</p>)
+                ) : (
+                  <p>• {t.backstage.guardStatusNotConfigured}</p>
+                )}
+              </div>
+
+              <div>
+                <p className="mb-2 font-semibold uppercase tracking-wider text-white/40">
+                  {t.backstage.guardDeniedTopics}
+                </p>
+                {deniedTopics.length > 0 ? (
+                  deniedTopics.map((item) => <p key={item}>• {item}</p>)
+                ) : (
+                  <p>• {t.backstage.guardStatusNotConfigured}</p>
+                )}
+              </div>
+
+              <div>
+                <p className="mb-2 font-semibold uppercase tracking-wider text-white/40">
+                  {t.backstage.guardPiiMasking}
+                </p>
+                {piiEntities.length > 0 ? (
+                  piiEntities.map((item) => <p key={item}>• {item}</p>)
+                ) : (
+                  <p>• {t.backstage.guardStatusNotConfigured}</p>
+                )}
+              </div>
+
+              <div>
+                <p className="mb-2 font-semibold uppercase tracking-wider text-white/40">
+                  {t.backstage.guardsLastTurn}
+                </p>
+                {metrics.lastGuardrailAssessments &&
+                metrics.lastGuardrailAssessments.length > 0 ? (
+                  <div className="space-y-2">
+                    <p className="text-white/55">
+                      {metrics.lastGuardrailIntervened
+                        ? t.backstage.guardsIntervened
+                        : t.backstage.guardsNotIntervened}
+                    </p>
+                    {metrics.lastGuardrailAssessments.map((assessment, index) => (
+                      <p key={`${assessment.source ?? "assessment"}-${index}`}>
+                        • {assessment.source ?? "—"}: {assessment.action ?? assessment.error ?? "—"}
+                        {assessment.actionReason
+                          ? ` — ${assessment.actionReason}`
+                          : ""}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p>• {t.backstage.guardsNoAssessments}</p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </BackstageCard>
@@ -550,7 +683,7 @@ export function BackstageContent({
     case "observability":
       return <ObservabilityTab metrics={metrics} />;
     case "guards":
-      return <GuardsTab />;
+      return <GuardsTab metrics={metrics} />;
     default:
       return null;
   }

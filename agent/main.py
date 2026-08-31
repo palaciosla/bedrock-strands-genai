@@ -21,7 +21,11 @@ load_dotenv()
 logging.getLogger("strands").setLevel(logging.DEBUG)
 logging.basicConfig(format="%(levelname)s | %(message)s")
 
-model = BedrockModel(model_id="amazon.nova-lite-v1:0", region_name=os.environ.get("AWS_REGION"))
+
+guardrail_id = os.environ.get("GUARDRAIL_ID")
+guardrail_version = os.environ.get("GUARDRAIL_VERSION")
+
+model = BedrockModel(model_id="amazon.nova-lite-v1:0", region_name=os.environ.get("AWS_REGION"), guardrail_id=guardrail_id, guardrail_version=guardrail_version, guardrail_trace="enabled")
 agent = Agent(
     model=model,
     tools=[

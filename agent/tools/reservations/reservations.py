@@ -4,7 +4,11 @@ from agent.db.main import supabase
 from typing import Optional
 from datetime import date
 import re
-from agent.tools.utils.main import normalize_time
+from agent.tools.utils.main import (
+    normalize_time,
+    parse_reservation_date,
+    parse_reservation_time,
+)
 from pydantic import (
     BaseModel,
     EmailStr,
@@ -43,7 +47,7 @@ class ReservationCreate(BaseModel):
     @field_validator("reservation_time")
     @classmethod
     def valid_time(cls, v: str) -> str:
-        if not re.fullmatch(r"(\d{1,2}):(\d{2})", v):
+        if not re.fullmatch(r"(\d{2}):(\d{2})", v):
             raise ValueError("Hora inválida, usar HH:MM")
         return v
 
@@ -67,14 +71,15 @@ def create_reservation(
 ) -> dict:
     """
     Create and schedule reservations for the restaurant.
-    Check availability first using check_availability before creating
+    Use ONLY after check_availability confirms available=true for the same date, time, and party_size.
+    Never call search_knowledge as part of the reservation flow.
 
     Args:
         guest_name: Full name of the guest
         guest_email: Contact email
         party_size: Number of people. Must be between 1 and 20
-        reservation_date: Date of the reservation. Must be in YYYY-MM-DD format
-        reservation_time: Time of the reservation. Must be in HH:MM format (24hs)
+        reservation_date: YYYY-MM-DD or relative phrases (hoy, mañana, el viernes, in 3 days).
+        reservation_time: HH:MM (24h) or values like 8pm
         notes: Optional special guest requests
 
     Returns:
@@ -83,12 +88,18 @@ def create_reservation(
     """
 
     try:
+        parsed_date = parse_reservation_date(reservation_date)
+        parsed_time = parse_reservation_time(reservation_time)
+    except ValueError as exc:
+        return {"success": False, "message": str(exc)}
+
+    try:
         reservation = ReservationCreate(
             guest_name=guest_name,
             guest_email=guest_email,
             party_size=party_size,
-            reservation_date=reservation_date,
-            reservation_time=reservation_time,
+            reservation_date=parsed_date,
+            reservation_time=parsed_time,
             notes=notes,
         )
     except ValidationError as exc:
@@ -125,8 +136,8 @@ def check_availability(
     Check if there's availability for a given date and time.
 
     Args:
-        reservation_date: Date in YYYY-MM-DD format.
-        reservation_time: Time in HH:MM format (24h).
+        reservation_date: YYYY-MM-DD or relative phrases (hoy, mañana, el viernes, in 3 days)..
+        reservation_time: HH:MM (24h) or values like 8pm.
         party_size: Number of people requesting (default 1).
     Returns:
         Dict with availability status and current occupancy.
@@ -140,19 +151,19 @@ def check_availability(
         return {"success": False, "message": "La cantidad de invitados no es valida"}
 
     try:
-        print("Checking availability")
-        normalized_time = normalize_time(reservation_time)
+        parsed_date = parse_reservation_date(reservation_date)
+        parsed_time = parse_reservation_time(reservation_time)
+        normalized_time = normalize_time(parsed_time)
         response = (
             supabase.table("reservations")
             .select("party_size")
-            .eq("reservation_date", reservation_date)
+            .eq("reservation_date", parsed_date.isoformat())
             .eq("reservation_time", normalized_time)
             .eq("status", "confirmed")
             .execute()
         )
 
         current_covers = sum(r["party_size"] for r in response.data)
-
         available = (current_covers + party_size) <= MAX_COVERS_PER_SLOT
 
         return {
@@ -160,7 +171,11 @@ def check_availability(
             "available": available,
             "current_covers": current_covers,
             "max_covers": MAX_COVERS_PER_SLOT,
+            "reservation_date": parsed_date.isoformat(),
+            "reservation_time": parsed_time,
         }
+    except ValueError as exc:
+        return {"success": False, "message": str(exc)}
     except Exception as e:
         return {"success": False, "message": str(e)}
 
@@ -195,10 +210,13 @@ def get_reservations(
         )
 
         if reservation_date:
-            query = query.eq("reservation_date", reservation_date)
+            query = query.eq(
+                "reservation_date",
+                parse_reservation_date(reservation_date).isoformat(),
+            )
 
         if reservation_time:
-            normalized_time = normalize_time(reservation_time)
+            normalized_time = normalize_time(parse_reservation_time(reservation_time))
             query = query.eq("reservation_time", normalized_time)
 
         response = query.execute()
@@ -208,5 +226,7 @@ def get_reservations(
             "reservations": response.data,
             "count": len(response.data),
         }
+    except ValueError as exc:
+        return {"success": False, "message": str(exc)}
     except Exception as e:
         return {"success": False, "message": str(e)}

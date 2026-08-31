@@ -5,6 +5,7 @@ import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "../../i18n/I18nProvider";
+import { TestsMenu } from "./TestsMenu";
 
 export function ChatInput({
   onSend,
@@ -38,6 +39,7 @@ export function ChatInput({
           placeholder={t.chat.placeholder}
           className="min-w-0 flex-1 border-0 bg-transparent text-sm font-medium shadow-none focus-visible:ring-0"
         />
+        <TestsMenu onSelect={onSend} disabled={isLoading} />
         <Button
           type="submit"
           disabled={isLoading || !input.trim()}

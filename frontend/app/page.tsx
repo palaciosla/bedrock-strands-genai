@@ -58,7 +58,10 @@ function HomeContent() {
           if (lastUserIndex >= 0) {
             updated[lastUserIndex] = {
               ...updated[lastUserIndex],
-              details: { inputTokens: data.input_tokens },
+              details: {
+                inputTokens: data.input_tokens,
+                guardrailIntervened: Boolean(data.guardrail_intervened),
+              },
             };
           }
 

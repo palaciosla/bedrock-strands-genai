@@ -1,4 +1,4 @@
-import { MessageDetails, SessionMetrics } from "./types";
+import { GuardrailAssessment, MessageDetails, SessionMetrics } from "./types";
 
 export type ChatApiResponse = {
   response: string;
@@ -10,6 +10,8 @@ export type ChatApiResponse = {
   avg_latency_ms: number;
   request_count: number;
   tools_used: string[];
+  guardrail_intervened?: boolean;
+  guardrail_assessments?: GuardrailAssessment[];
 };
 
 export type NormalizedChatMetrics = {
@@ -45,6 +47,8 @@ export function normalizedSessionMetrics(
     avgLatencyMs: apiResponse.avg_latency_ms,
     lastTool: toolsUsed[0] ?? previous.lastTool,
     recentTools: [...new Set(recentTools)],
+    lastGuardrailIntervened: Boolean(apiResponse.guardrail_intervened),
+    lastGuardrailAssessments: apiResponse.guardrail_assessments ?? [],
   };
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, PawPrint, User } from "lucide-react";
+import { Loader2, PawPrint, ShieldAlert, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -67,30 +67,45 @@ function MessageMeta({
     });
   }
 
-  if (items.length === 0) return null;
+  if (items.length === 0 && !details.guardrailIntervened) return null;
 
   return (
     <div
       className={cn(
-        "mt-2 flex flex-wrap gap-x-3 gap-y-1 border-t pt-2 text-[10px] font-medium leading-4",
+        "mt-2 flex flex-col gap-2 border-t pt-2 text-[10px] font-medium leading-4",
         role === "user"
           ? "border-white/15 text-white/55"
           : "border-foreground/10 text-muted-foreground",
       )}
     >
-      {items.map((item) => (
-        <span key={item.label}>
-          <span
-            className={cn(
-              "font-semibold",
-              role === "user" ? "text-white/75" : "text-foreground/70",
-            )}
-          >
-            {item.label}:
-          </span>{" "}
-          {item.value}
-        </span>
-      ))}
+      {details.guardrailIntervened && (
+        <div
+          className={cn(
+            "flex items-center gap-1.5 font-semibold",
+            role === "user" ? "text-amber-300" : "text-amber-700",
+          )}
+        >
+          <ShieldAlert className="size-3 shrink-0" aria-hidden />
+          <span>{t.chat.guardrailIntervened}</span>
+        </div>
+      )}
+      {items.length > 0 && (
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
+          {items.map((item) => (
+            <span key={item.label}>
+              <span
+                className={cn(
+                  "font-semibold",
+                  role === "user" ? "text-white/75" : "text-foreground/70",
+                )}
+              >
+                {item.label}:
+              </span>{" "}
+              {item.value}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
