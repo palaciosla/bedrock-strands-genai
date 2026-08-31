@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Wise-inspired tokens (design-md/wise) */
+  --wise-near-black: #0e0f0c;
+  --wise-green: #9fe870;
+  --wise-dark-green: #163300;
+  --wise-mint: #e2f6d5;
+  --wise-pastel-green: #cdffad;
+  --wise-gray: #868685;
+  --wise-surface: #e8ebe6;
+  --wise-cream: #f5f1e8;
+  --wise-cream-light: #faf7f0;
+  --wise-danger: #d03238;
+  --wise-positive: #054d28;
+
+  --background: var(--wise-cream);
+  --foreground: #0e0f0c;
+  --card: var(--wise-cream-light);
+  --card-foreground: #0e0f0c;
+  --popover: var(--wise-cream-light);
+  --popover-foreground: #0e0f0c;
+  --primary: #9fe870;
+  --primary-foreground: #163300;
+  --secondary: rgba(22, 51, 0, 0.08);
+  --secondary-foreground: #0e0f0c;
+  --muted: #ebe6dc;
+  --muted-foreground: #6b6b69;
+  --accent: #e2f6d5;
+  --accent-foreground: #163300;
+  --destructive: #d03238;
+  --border: rgba(14, 15, 12, 0.12);
+  --input: rgba(14, 15, 12, 0.12);
+  --ring: #9fe870;
+  --radius: 1.875rem;
+
+  /* App extensions */
+  --chat-bg: var(--wise-cream);
+  --panel-bg: #0e0f0c;
+  --panel-card: #1a1b18;
+  --agent-bubble: #e2f6d5;
+  --tab-active: #9fe870;
+  --wise-ring: rgba(14, 15, 12, 0.12);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: var(--radius);
+  --radius-xl: 2.5rem;
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  --animate-shiny-text: shiny-text 8s infinite;
+
+  @keyframes shimmer-slide {
+    to {
+      transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
+
+  @keyframes spin-around {
+    0% {
+      transform: translateZ(0) rotate(0);
+    }
+    15%,
+    35% {
+      transform: translateZ(0) rotate(90deg);
+    }
+    65%,
+    85% {
+      transform: translateZ(0) rotate(270deg);
+    }
+    100% {
+      transform: translateZ(0) rotate(360deg);
+    }
+  }
+
+  @keyframes shiny-text {
+    0%,
+    90%,
+    100% {
+      background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+    30%,
+    60% {
+      background-position: calc(100% + var(--shiny-width)) 0;
+    }
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--chat-bg);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-feature-settings: "calt" 1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Wise interaction pattern: scale on hover/active */
+.wise-interactive {
+  transition: transform 200ms ease;
+}
+
+.wise-interactive:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.wise-interactive:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.wise-ring {
+  box-shadow: var(--wise-ring) 0 0 0 1px;
+}
+
+.wise-card {
+  border-radius: 1.875rem;
+  box-shadow: var(--wise-ring) 0 0 0 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .wise-interactive:hover:not(:disabled),
+  .wise-interactive:active:not(:disabled) {
+    transform: none;
+  }
+}

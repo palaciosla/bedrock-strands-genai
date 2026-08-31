@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "title": "Reino Canino — Chila",
+    "description": "Intelligent assistant for Reino Canino restaurant"
+  },
+  "brand": {
+    "restaurant": "Reino Canino",
+    "assistantLabel": "INTELLIGENT ASSISTANT",
+    "agentName": "Chila",
+    "online": "online",
+    "cornerTitle": "The kitchen",
+    "cornerSubtitle": "Live session monitoring: Bedrock metrics, tool calls, agent observability, PostgreSQL, and guardrails.",
+    "liveOs": "LIVE RESTAURANT OS",
+    "backstage": "Backstage"
+  },
+  "chat": {
+    "placeholder": "Write to Chila...",
+    "send": "Send",
+    "thinking": "Chila is sniffing around...",
+    "disclaimer": "Chila can be wrong. But never about dessert.",
+    "seeDetails": "See details",
+    "hideDetails": "Hide details",
+    "welcomeTitle": "Welcome to the kingdom",
+    "welcomeBody": "I'm Chila, assistant at Reino Canino. Ask about the menu, book a table, or dig into our policies — I'll answer with data, not dog dreams.",
+    "detailsTools": "Tools",
+    "detailsInputTokens": "Input",
+    "detailsOutputTokens": "Output",
+    "detailsLatency": "Latency",
+    "errorMessage": "We couldn't reach Chila. Please try again in a few seconds."
+  },
+  "suggestions": {
+    "tableToday": "Any tables for today?",
+    "vegetarian": "What vegetarian dishes do you have?",
+    "history": "Tell me the story of Reino Canino",
+    "dessert": "What's for dessert?"
+  },
+  "tabs": {
+    "sql": "SQL",
+    "metrics": "Metrics",
+    "prompt": "Prompt",
+    "observability": "Observability",
+    "guards": "Guards"
+  },
+  "backstage": {
+    "sqlTitle": "LIVE DATABASE",
+    "sqlBadge": "SQL · LIVE",
+    "sqlDescription": "Supabase PostgreSQL — structured data source for menu and reservations.",
+    "sqlLive": "Live",
+    "sqlEmpty": "No rows yet",
+    "sqlLoading": "Querying…",
+    "sqlError": "Could not connect to the database",
+    "sqlSessionFilter": "Filtered by session_id",
+    "sqlRowCount": "{count} row(s)",
+    "sqlFilterCategory": "Category",
+    "sqlFilterDietary": "Diet",
+    "sqlFilterAvailable": "available=true only",
+    "sqlFilterAll": "All",
+    "sqlReadOnly": "READ",
+    "sqlReadWrite": "READ/WRITE",
+    "tables": {
+      "menu": "menu_items",
+      "reservations": "reservations",
+      "menuDescription": "name, price, category, dietary_tags, available",
+      "reservationsDescription": "guest_name, party_size, reservation_date, reservation_time, status, session_id"
+    },
+    "metricsTitle": "SESSION METRICS",
+    "metricsBadge": "BEDROCK · LIVE",
+    "promptTitle": "PROMPT MANAGEMENT",
+    "promptBadge": "LOCAL · v1",
+    "promptVersion": "Active version",
+    "promptVersionValue": "system_prompt.py · v1-local",
+    "promptTools": "get_menu, check_availability, create_reservation, search_knowledge",
+    "promptNote": "Prompt is versioned locally. Bedrock Prompt Management is not integrated.",
+    "obsTitle": "AGENT OBSERVABILITY",
+    "obsBadge": "STRANDS",
+    "guardsTitle": "BEDROCK GUARDRAILS",
+    "guardsBadge": "NOT CONFIGURED",
+    "guardsNote": "Bedrock Guardrails is not integrated in this environment.",
+    "guardContentFilters": "Content filters",
+    "guardDeniedTopics": "Denied topics",
+    "guardPiiMasking": "PII masking",
+    "guardStatusNotConfigured": "not configured",
+    "lastTool": "Last tool call",
+    "noToolYet": "Waiting for first tool call...",
+    "requests": "Requests",
+    "inputTokens": "Input tokens",
+    "outputTokens": "Output tokens",
+    "totalTokens": "Total tokens",
+    "avgLatency": "Avg latency"
+  },
+  "lang": {
+    "switch": "Language",
+    "es": "Español",
+    "en": "English"
+  }
+}
