@@ -1,4 +1,4 @@
-Portfolio demo: a chat (menu, reservations, FAQs) exercising production AI patterns on AWS — Bedrock Nova Lite, Strands Agents, Knowledge Base RAG, Supabase-backed tools, and a live ops UI.
+A chat (menu, reservations, FAQs) exercising production AI patterns on AWS — Bedrock Nova Lite, Strands Agents, Knowledge Base RAG, Supabase-backed tools, and a live ops UI.
 
 ## Quick reference
 
