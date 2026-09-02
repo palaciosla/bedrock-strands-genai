@@ -1,0 +1,172 @@
+{
+  "overall_score": 0.52,
+  "scores": [
+    0.7,
+    0.7,
+    0.3,
+    0.9,
+    0.0
+  ],
+  "cases": [
+    {
+      "input": "\u00bfCu\u00e1l es la pol\u00edtica de cancelaci\u00f3n?",
+      "actual_output": "\u00a1Ah, la pol\u00edtica de cancelaci\u00f3n! Bueno, en Reino Canino entendemos que los planes pueden cambiar, especialmente cuando aparece una siesta inesperadamente buena. As\u00ed que si necesitas cancelar una reserva, no te preocupes, \u00a1pod\u00e9s hacerlo sin cargo hasta 12 horas antes del horario reservado! Si tu plan cambi\u00f3 debido a una siesta particularmente prometedora, te recomendamos avisarnos con tiempo para que podamos ajustarnos y asegurarnos de que otro hambriento canino pueda disfrutar de la mesa.\n\nPero recuerda, las cancelaciones realizadas con menos de 12 horas de anticipaci\u00f3n pueden estar sujetas a condiciones especiales seg\u00fan el tipo de reserva o evento. Y para cancelar una reserva, es necesario identificar correctamente la reserva correspondiente. As\u00ed que aseg\u00farate de tener los detalles precisos antes de hacer la cancelaci\u00f3n.\n\nSi no pod\u00e9s asistir, recomendamos cancelar con la mayor anticipaci\u00f3n posible para que otra mesa de hambrientos ciudadanos del reino pueda aprovechar el lugar. Y si necesitas hacer cambios en una reserva, tambi\u00e9n podemos ayudarte siempre y cuando haya disponibilidad. \u00a1Estamos aqu\u00ed para hacer que tu experiencia en Reino Canino sea lo m\u00e1s agradable posible!",
+      "name": "faq-cancel-policy",
+      "expected_output": "Las reservas pueden cancelarse sin cargo hasta 12 horas antes del horario reservado. Las cancelaciones con menos de 12 horas pueden tener condiciones especiales.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "\u00bfCu\u00e1les son los horarios del restaurante?",
+      "actual_output": "\u00a1Aqu\u00ed tienes los horarios de Reino Canino! \n\n- **Lunes a Jueves:** 10:00 a 23:00\n- **Viernes, S\u00e1bado y Domingo:** 10:00 a 01:00\n\nDurante los fines de semana, te recomiendo hacer tu reserva con anticipaci\u00f3n, porque despu\u00e9s de las 22:00, conseguir una mesa puede ser m\u00e1s dif\u00edcil que encontrar una pelota en un parque p\u00fablico. \n\nSi necesitas reservar, aseg\u00farate de tener a mano tu nombre, email y la cantidad de invitados, adem\u00e1s de la fecha y el horario deseados para verificar la disponibilidad. \n\n\n\n\u00a1Disfruta de tu visita!",
+      "name": "faq-hours",
+      "expected_output": "Lunes a jueves de 10:00 a 23:00. Viernes, s\u00e1bado y domingo de 10:00 a 01:00.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "\u00bfQu\u00e9 platos vegetarianos tienen?",
+      "actual_output": "\u00a1Vaya! Parece que tenemos una variedad de delicias vegetarianas que no solo son amigables para los humanos, sino tambi\u00e9n para tus gustos caninos. Aqu\u00ed tienes la lista de platos vegetarianos disponibles:\n\n1. **Provoleta gratinada** - Queso provolone fundido en sart\u00e9n de hierro con or\u00e9gano y aceite de oliva. (Aperitivo, apto para cel\u00edacos)\n2. **Sorrentinos de ricota y espinaca** - Pasta casera rellena con salsa rosa y queso parmesano.\n3. **\u00d1oquis del 29** - \u00d1oquis de papa caseros con salsa bolognesa o crema.\n4. **Flan casero con dulce de leche** - Flan de huevo casero con dulce de leche artesanal y crema. (Postre, apto para cel\u00edacos)\n5. **Vigilante** - Cl\u00e1sico postre argentino: queso con dulce de batata o membrillo. (Postre, apto para cel\u00edacos)\n6. **Panqueque de dulce de leche** - Panqueques caseros rellenos de dulce de leche con crema batida.\n7. **Helado artesanal (2 bochas)** - Helado artesanal a elecci\u00f3n: dulce de leche, chocolate o frutos rojos. (Postre, apto para cel\u00edacos)\n8. **Tiramis\u00fa casero** - Postre italiano con bizcochos, mascarpone, caf\u00e9 y cacao.\n\n\u00bfAlguna de estas opciones te interesa? \u00a1Digo, a m\u00ed me encantar\u00eda probar el flan casero con dulce de leche! \ud83d\ude0b\ud83d\udc3e",
+      "name": "menu-vegetarian",
+      "expected_output": "Menciona platos vegetarianos reales del men\u00fa. No inventa platos.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "menu"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "Quiero reservar mesa para ma\u00f1ana a las 20:00",
+      "actual_output": "Sure thing, but let's get some details sorted out first. How many fur-iends are joining you, and what's your name and email?",
+      "name": "reservation-incomplete",
+      "expected_output": "Pide nombre, email y cantidad de invitados. No confirma la reserva todav\u00eda.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "reservations"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "\u00bfQui\u00e9n gan\u00f3 el \u00faltimo mundial de f\u00fatbol?",
+      "actual_output": "",
+      "name": "out-of-scope",
+      "expected_output": "Declina el tema y vuelve al restaurante Reino Canino.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "scope"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    }
+  ],
+  "test_passes": [
+    true,
+    false,
+    false,
+    true,
+    false
+  ],
+  "reasons": [
+    "The output provides most of the correct information about the cancellation policy, including the no-charge period and special conditions for cancellations made less than 12 hours in advance, but it includes additional details not present in the expected output.",
+    "The output provides the correct hours but includes additional information and a sarcastic comment which were not asked for. However, the core information matches the expected output.",
+    "The output lists dishes that may not all be vegetarian and includes fictional dishes, failing to meet the expected requirement of listing only real vegetarian dishes from the menu.",
+    "The output aligns with the expected output by asking for the necessary details without confirming the reservation, but includes a sarcastic tone which is not explicitly mentioned in the rubric.",
+    "The output does not match the expected output, which is to decline the topic and return to the Reino Canino restaurant."
+  ],
+  "detailed_results": [
+    [
+      {
+        "score": 0.7,
+        "test_pass": true,
+        "reason": "The output provides most of the correct information about the cancellation policy, including the no-charge period and special conditions for cancellations made less than 12 hours in advance, but it includes additional details not present in the expected output.",
+        "label": "Partially correct"
+      }
+    ],
+    [
+      {
+        "score": 0.7,
+        "test_pass": false,
+        "reason": "The output provides the correct hours but includes additional information and a sarcastic comment which were not asked for. However, the core information matches the expected output.",
+        "label": "partial"
+      }
+    ],
+    [
+      {
+        "score": 0.3,
+        "test_pass": false,
+        "reason": "The output lists dishes that may not all be vegetarian and includes fictional dishes, failing to meet the expected requirement of listing only real vegetarian dishes from the menu.",
+        "label": "Incorrect"
+      }
+    ],
+    [
+      {
+        "score": 0.9,
+        "test_pass": true,
+        "reason": "The output aligns with the expected output by asking for the necessary details without confirming the reservation, but includes a sarcastic tone which is not explicitly mentioned in the rubric.",
+        "label": "almost good"
+      }
+    ],
+    [
+      {
+        "score": 0.0,
+        "test_pass": false,
+        "reason": "The output does not match the expected output, which is to decline the topic and return to the Reino Canino restaurant.",
+        "label": "incorrect"
+      }
+    ]
+  ],
+  "diagnoses": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "recommendations": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

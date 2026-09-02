@@ -1,0 +1,191 @@
+{
+  "overall_score": 1.0,
+  "scores": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "cases": [
+    {
+      "input": "\u00bfCu\u00e1l es la pol\u00edtica de cancelaci\u00f3n?",
+      "actual_output": "La pol\u00edtica de cancelaci\u00f3n de Reino Canino es la siguiente: puedes cancelar tu reserva sin cargo hasta 12 horas antes del horario reservado. Las cancelaciones realizadas con menos de 12 horas de anticipaci\u00f3n pueden estar sujetas a condiciones especiales seg\u00fan el tipo de reserva o evento. Para cancelar una reserva, es necesario identificar correctamente la reserva correspondiente. Si no puedes asistir, recomendamos cancelar con la mayor anticipaci\u00f3n posible para que otra mesa de hambrientos ciudadanos del reino pueda aprovechar el lugar.",
+      "name": "faq-cancel-policy",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "search_knowledge"
+      ],
+      "actual_trajectory": [
+        "search_knowledge"
+      ],
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "\u00bfCu\u00e1les son los horarios del restaurante?",
+      "actual_output": "El restaurante Reino Canino abre todos los d\u00edas, aunque parece que alguien siempre tiene que trabajar mientras los dem\u00e1s duermen la siesta. Aqu\u00ed est\u00e1n los horarios:\n\n- **Lunes a jueves**: de 10:00 a 23:00\n- **Viernes, s\u00e1bado y domingo**: de 10:00 a 01:00\n\nDurante los fines de semana, te recomiendo reservar con anticipaci\u00f3n, ya que despu\u00e9s de las 22:00 encontrar una mesa puede ser m\u00e1s complicado que encontrar una pelota en un parque p\u00fablico.",
+      "name": "faq-hours",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "search_knowledge"
+      ],
+      "actual_trajectory": [
+        "search_knowledge"
+      ],
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "\u00bfQu\u00e9 platos vegetarianos tienen?",
+      "actual_output": "\u00a1Claro que s\u00ed! Aqu\u00ed ten\u00e9s una lista de nuestros platos vegetarianos:\n\n1. **Provoleta gratinada**\n   - Descripci\u00f3n: Queso provolone fundido en sart\u00e9n de hierro con or\u00e9gano y aceite de oliva.\n   - Precio: 8900\n\n2. **Sorrentinos de ricota y espinaca**\n   - Descripci\u00f3n: Pasta casera rellena con salsa rosa y queso parmesano.\n   - Precio: 12500\n\n3. **\u00d1oquis del 29**\n   - Descripci\u00f3n: \u00d1oquis de papa caseros con salsa bolognesa o crema.\n   - Precio: 11800\n\n4. **Flan casero con dulce de leche**\n   - Descripci\u00f3n: Flan de huevo casero con dulce de leche artesanal y crema.\n   - Precio: 6200\n\n5. **Vigilante**\n   - Descripci\u00f3n: Cl\u00e1sico postre argentino: queso con dulce de batata o membrillo.\n   - Precio: 4800\n\n6. **Panqueque de dulce de leche**\n   - Descripci\u00f3n: Panqueques caseros rellenos de dulce de leche con crema batida.\n   - Precio: 6500\n\n7. **Helado artesanal (2 bochas)**\n   - Descripci\u00f3n: Helado artesanal a elecci\u00f3n: dulce de leche, chocolate o frutos rojos.\n   - Precio: 5800\n\n8. **Tiramis\u00fa casero**\n   - Descripci\u00f3n: Postre italiano con bizcochos, mascarpone, caf\u00e9 y cacao.\n   - Precio: 7200\n\n\u00a1Que aproveche! \ud83d\udc3e\ud83c\udf7d\ufe0f",
+      "name": "menu-vegetarian",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "get_menu"
+      ],
+      "actual_trajectory": [
+        "get_menu"
+      ],
+      "metadata": {
+        "category": "menu"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "Quiero reservar mesa para ma\u00f1ana a las 20:00",
+      "actual_output": "Cuantas personas van a venir?",
+      "name": "reservation-incomplete",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [],
+      "actual_trajectory": [],
+      "metadata": {
+        "category": "reservations",
+        "forbidden_tools": [
+          "create_reservation"
+        ]
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "\u00bfTienen mesa disponible ma\u00f1ana a las 20:00?",
+      "actual_output": "\u00bfPodr\u00edas proporcionarme tu nombre, email, cantidad de invitados y alguna nota especial para la reserva?",
+      "name": "availability-check",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "check_availability"
+      ],
+      "actual_trajectory": [
+        "check_availability"
+      ],
+      "metadata": {
+        "category": "reservations"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    }
+  ],
+  "test_passes": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "reasons": [
+    "The trajectory matched the expected trajectory exactly, and there are no forbidden actions.",
+    "The trajectory perfectly matches the expected trajectory and the output is relevant and correct.",
+    "The actual trajectory matches the expected trajectory exactly, and the tool choice was appropriate.",
+    "The trajectory is empty, which is appropriate given the incomplete reservation request.",
+    "The tool choice is appropriate, and the actual trajectory matches the expected trajectory exactly."
+  ],
+  "detailed_results": [
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The trajectory matched the expected trajectory exactly, and there are no forbidden actions.",
+        "label": "Perfect Match"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The trajectory perfectly matches the expected trajectory and the output is relevant and correct.",
+        "label": "Pass"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The actual trajectory matches the expected trajectory exactly, and the tool choice was appropriate.",
+        "label": "PASS"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The trajectory is empty, which is appropriate given the incomplete reservation request.",
+        "label": "PASS"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The tool choice is appropriate, and the actual trajectory matches the expected trajectory exactly.",
+        "label": ""
+      }
+    ]
+  ],
+  "diagnoses": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "recommendations": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

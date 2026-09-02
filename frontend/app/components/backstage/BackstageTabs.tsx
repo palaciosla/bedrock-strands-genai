@@ -10,6 +10,7 @@ const TAB_ORDER: BackstageTab[] = [
   "prompt",
   "observability",
   "guards",
+  "eval",
 ];
 
 export function BackstageTabs({
@@ -27,6 +28,7 @@ export function BackstageTabs({
     prompt: t.tabs.prompt,
     observability: t.tabs.observability,
     guards: t.tabs.guards,
+    eval: t.tabs.eval,
   };
 
   return (

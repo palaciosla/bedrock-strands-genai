@@ -23,7 +23,31 @@ export type ChatMessage = {
   details?: MessageDetails;
 };
 
-export type BackstageTab = "sql" | "metrics" | "prompt" | "observability" | "guards";
+export type BackstageTab = "sql" | "metrics" | "prompt" | "observability" | "guards" | "eval";
+
+export type EvalCaseScore = {
+  score: number | null;
+  passed: boolean | null;
+};
+
+export type EvalModelSummary = {
+  overall_score: number | null;
+  pass_rate: number | null;
+  run_date: string | null;
+};
+
+export type EvalComparisonRow = {
+  case_name: string;
+  input: string | null;
+  by_model: Record<string, EvalCaseScore>;
+};
+
+export type EvalComparison = {
+  eval_type: string;
+  models: string[];
+  rows: EvalComparisonRow[];
+  model_summaries?: Record<string, EvalModelSummary>;
+};
 
 export type SessionMetrics = {
   requestCount: number;

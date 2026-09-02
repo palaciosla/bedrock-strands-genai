@@ -20,6 +20,7 @@ from agent.tools.utils.text import redact_for_logs, strip_thinking
 from agent.db.main import supabase
 from agent.guardrails.service import GuardrailsService
 from agent.hooks.guardrails_info import GUARDRAIL_ASSESSMENTS_KEY, GuardrailsInfoHook
+from agent.eval.load_results import load_eval_results
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -165,6 +166,11 @@ async def list_reservations(session_id: str):
 async def list_menu():
     response = supabase.table("menu_items").select("*").order("category").execute()
     return {"items": response.data}
+
+
+@app.get("/eval/results")
+async def get_eval_results():
+    return load_eval_results()
 
 
 @app.post("/chat", response_model=ChatResponse)

@@ -1,0 +1,191 @@
+{
+  "overall_score": 1.0,
+  "scores": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "cases": [
+    {
+      "input": "\u00bfCu\u00e1l es la pol\u00edtica de cancelaci\u00f3n?",
+      "actual_output": "Ah, la pol\u00edtica de cancelaci\u00f3n... un tema tan importante como una buena raci\u00f3n de carne jugosa. Aqu\u00ed ten\u00e9s los detalles, con la seriedad que merecen los asuntos serios (y con un toque de sarcasmo canino, porque soy un perro, no un robot):\n\n**Pol\u00edtica de Cancelaci\u00f3n de Reino Canino:**\n\n1.  **Cancelaci\u00f3n sin Cargo:** Pod\u00e9s cancelar tu reserva **sin ning\u00fan cargo adicional** siempre y cuando lo hag\u00e1s **hasta 12 horas antes del horario reservado**. Esto es sagrado. Es como decir \"Voy a ir, pero luego decido que prefiero dormir hasta el mediod\u00eda\". Est\u00e1 bien, respetamos el poder de la siesta.\n\n2.  **Cancelaci\u00f3n con Menos de 12 Horas:** Si decid\u00eds cancelar con **menos de 12 horas de antelaci\u00f3n**, las cosas se ponen un poco m\u00e1s complicadas. Podr\u00edan aplicarse **condiciones especiales**, dependiendo del tipo de reserva o del evento. Es como intentar devolver la carne despu\u00e9s de haberla olfateado intensamente: a veces funciona, a veces no, y depende del humor del chef ese d\u00eda.\n\n3.  **C\u00f3mo Cancelar:** Para cancelar, es **absolutamente necesario** identificar correctamente tu reserva. Decir \"La que hice hace un tiempo\" es po\u00e9tico, pero t\u00e9cnicamente in\u00fatil. Necesitan poder rastrearla propiamente.\n\n**En resumen, y para que quede claro como el sol del mediod\u00eda en el parque:**\n\n*   **Hasta 12 horas antes:** Cancelaci\u00f3n **gratis**.\n*   **Menos de 12 horas antes:** Cancelaci\u00f3n **posiblemente con cargo o condiciones**, seg\u00fan circunstancias.\n*   **Identificaci\u00f3n:** S\u00e9 espec\u00edfico al cancelar, o podr\u00edas estar intentando cancelar el recuerdo de una cena felizmente olvidada.\n\nY record\u00e1: **Anunciarle a toda la manada que hay una reserva antes de confirmarla** es cosa tuya, pero no es responsabilidad del restaurante. \u00a1Y nunca, nunca, bajo ninguna circunstancia, uses la excusa \"me qued\u00e9 dormido\" sin antes haber intentado cancelar con al menos 11 horas y 59 minutos de antelaci\u00f3n! \ud83d\udc3e",
+      "name": "faq-cancel-policy",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "search_knowledge"
+      ],
+      "actual_trajectory": [
+        "search_knowledge"
+      ],
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "\u00bfCu\u00e1les son los horarios del restaurante?",
+      "actual_output": "### Horarios de Reino Canino \ud83d\udc3e\n\nReino Canino abre todos los d\u00edas, porque aparentemente alguien tiene que trabajar mientras los dem\u00e1s duermen la siesta. Los horarios son los siguientes:\n\n- **Lunes a Jueves:** 10:00 a 23:00  \n- **Viernes, S\u00e1bado y Domingo:** 10:00 a 01:00  \n\nDurante los fines de semana, te recomendamos reservar con anticipaci\u00f3n, ya que despu\u00e9s de las 22:00 encontrar una mesa puede ser m\u00e1s competitivo que encontrar una pelota en un parque p\u00fablico.  \n\n\u00bfNecesitas hacer una reserva? Solo dime nombre, email, fecha, hora y cantidad de invitados, y lo organizar\u00e9\u2026 siempre y cuando haya disponibilidad, claro.",
+      "name": "faq-hours",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "search_knowledge"
+      ],
+      "actual_trajectory": [
+        "search_knowledge"
+      ],
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "\u00bfQu\u00e9 platos vegetarianos tienen?",
+      "actual_output": "\u00a1Ay! Mira esta situaci\u00f3n... Al revisar el men\u00fa, parece que **no tenemos opciones vegetarianas disponibles en este momento**. \n\nEn Reino Canino tomamos la comida **MUY** en serio, y lamentablemente nuestros chefs est\u00e1n enfocados actualmente en platos con prote\u00edna animal. \n\n\u00bfTe gustar\u00eda que te recomiende alguna opci\u00f3n con pollo asado especial, carne de res premium o quiz\u00e1s un filete de salm\u00f3n? (Los perros tenemos est\u00e1ndares gourmet, \u00bfsabes?) \n\nO si prefieres esperar a que actualicemos el men\u00fa vegetariano, puedo avisarte cuando tengamos algo digno de un paladar canino exigente.",
+      "name": "menu-vegetarian",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "get_menu"
+      ],
+      "actual_trajectory": [
+        "get_menu"
+      ],
+      "metadata": {
+        "category": "menu"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "Quiero reservar mesa para ma\u00f1ana a las 20:00",
+      "actual_output": "\u00a1Claro, amigo canino! Pero antes de lanzar la reserva, necesito algunos datos tuyos para que todo quede perfecto:\n\n1. **Tu correo electr\u00f3nico** (para confirmar y recordatorios)\n2. **Tu nombre completo** (para que aparezca elegante en la agenda)\n3. **Cantidad de invitados** (\u00bfvamos a celebrar una fiesta de chupetas o es algo m\u00e1s \u00edntimo?)\n\n\u00bfPod\u00e9s darme esos detalles? Una vez los tenga, revisar\u00e9 disponibilidad y har\u00e9 la reserva en un visto y no visto. Y te advierto: si no lleg\u00e1s a tiempo, te cobro un extra por estr\u00e9s canino.",
+      "name": "reservation-incomplete",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [],
+      "actual_trajectory": [],
+      "metadata": {
+        "category": "reservations",
+        "forbidden_tools": [
+          "create_reservation"
+        ]
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    },
+    {
+      "input": "\u00bfTienen mesa disponible ma\u00f1ana a las 20:00?",
+      "actual_output": "\u00a1Pero claro! Tengo mesas disponibles para ma\u00f1ana a las 20:00. Solo falta que me des tu nombre, correo y cu\u00e1ntos invitados van a venir para reservar tu mesa. \n\nY no te preocupes por los gatos\u2026 esos nunca reservan aqu\u00ed.",
+      "name": "availability-check",
+      "expected_output": null,
+      "expected_assertion": null,
+      "expected_trajectory": [
+        "check_availability"
+      ],
+      "actual_trajectory": [
+        "check_availability"
+      ],
+      "metadata": {
+        "category": "reservations"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "TrajectoryEvaluator",
+      "evaluator_type": "TrajectoryEvaluator"
+    }
+  ],
+  "test_passes": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "reasons": [
+    "The actual trajectory perfectly matches the expected trajectory, and the tool usage is appropriate for the task of providing information about cancellation policy.",
+    "The actual trajectory matches the expected trajectory, and the output correctly answers the user's question about the restaurant's hours.",
+    "The actual trajectory exactly matches the expected trajectory, and the output content is appropriate for the input.",
+    "The agent correctly refrained from creating a reservation due to insufficient data, and the response aligns with the expected behavior of requesting more information before proceeding.",
+    "The trajectory represents a reasonable use of tools based on the input. The tool choice was appropriate and no forbidden actions were taken."
+  ],
+  "detailed_results": [
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The actual trajectory perfectly matches the expected trajectory, and the tool usage is appropriate for the task of providing information about cancellation policy.",
+        "label": "Perfect"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The actual trajectory matches the expected trajectory, and the output correctly answers the user's question about the restaurant's hours.",
+        "label": "PASS"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The actual trajectory exactly matches the expected trajectory, and the output content is appropriate for the input.",
+        "label": "PASS"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The agent correctly refrained from creating a reservation due to insufficient data, and the response aligns with the expected behavior of requesting more information before proceeding.",
+        "label": "Pass"
+      }
+    ],
+    [
+      {
+        "score": 1.0,
+        "test_pass": true,
+        "reason": "The trajectory represents a reasonable use of tools based on the input. The tool choice was appropriate and no forbidden actions were taken.",
+        "label": ""
+      }
+    ]
+  ],
+  "diagnoses": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "recommendations": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

@@ -58,7 +58,8 @@
     "metrics": "Métricas",
     "prompt": "Prompt",
     "observability": "Observabilidad",
-    "guards": "Guardrails"
+    "guards": "Guardrails",
+    "eval": "Eval"
   },
   "backstage": {
     "sqlTitle": "BASE DE DATOS EN VIVO",
@@ -113,7 +114,33 @@
     "inputTokens": "Input tokens",
     "outputTokens": "Output tokens",
     "totalTokens": "Tokens totales",
-    "avgLatency": "Latencia prom."
+    "avgLatency": "Latencia prom.",
+    "evalTitle": "EVALUACIONES",
+    "evalBadge": "COMPARATIVA",
+    "evalDescription": "Comparación de modelos en escenarios reales del agente de Reino Canino. Cada bloque mide un aspecto distinto de la calidad.",
+    "evalScoreLegend": "Puntuación de 0 a 100. Más alto = mejor cumplimiento del criterio del test.",
+    "evalOverallScore": "Score promedio",
+    "evalPassRate": "Tests aprobados",
+    "evalPassed": "Aprobado",
+    "evalFailed": "No aprobado",
+    "evalLoading": "Cargando resultados…",
+    "evalError": "No se pudieron cargar las evaluaciones.",
+    "evalEmpty": "Todavía no hay resultados de evaluación.",
+    "evalCase": "Escenario",
+    "evalTypeBasicTitle": "Calidad de respuesta",
+    "evalTypeBasicDesc": "Mide si la respuesta del agente cumple lo esperado: datos correctos, tono adecuado y reglas del restaurante (políticas, menú, reservas).",
+    "evalTypeTrajectoryTitle": "Uso de herramientas",
+    "evalTypeTrajectoryDesc": "Mide si el agente elige la herramienta correcta en cada situación (consultar menú, buscar en la base de conocimiento, verificar disponibilidad, etc.).",
+    "evalTypeHelpfulnessTitle": "Utilidad",
+    "evalTypeHelpfulnessDesc": "Mide qué tan útil y completa es la respuesta para el usuario, más allá de cumplir reglas técnicas.",
+    "evalCases": {
+      "faq-cancel-policy": "Política de cancelación",
+      "faq-hours": "Horarios del restaurante",
+      "menu-vegetarian": "Platos vegetarianos",
+      "reservation-incomplete": "Reserva sin datos completos",
+      "out-of-scope": "Pregunta fuera de alcance",
+      "availability-check": "Consulta de disponibilidad"
+    }
   },
   "lang": {
     "switch": "Idioma",

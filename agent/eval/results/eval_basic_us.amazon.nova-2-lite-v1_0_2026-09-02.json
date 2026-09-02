@@ -1,0 +1,172 @@
+{
+  "overall_score": 0.65,
+  "scores": [
+    0.75,
+    0.8,
+    0.1,
+    0.9,
+    0.7
+  ],
+  "cases": [
+    {
+      "input": "\u00bfCu\u00e1l es la pol\u00edtica de cancelaci\u00f3n?",
+      "actual_output": "La pol\u00edtica de cancelaci\u00f3n del Reino Canino es as\u00ed de elegante y canina:\n\n**Pod\u00e9s cancelar sin cargo hasta 12 horas antes del horario reservado.** \n\nSi tu plan cambia porque apareci\u00f3 una siesta particularmente prometedora o cualquier otro imprevisto, **las cancelaciones realizadas con menos de 12 horas de anticipaci\u00f3n pueden estar sujetas a condiciones especiales** seg\u00fan el tipo de reserva o evento.\n\nComo buen can, te recomiendo cancelar con la mayor anticipaci\u00f3n posible. As\u00ed, otra mesa de hambrientos ciudadanos del reino puede aprovechar el lugar, y no quedamos como el gato que intent\u00f3 robar comida y termin\u00f3 con una patada en el trasero.\n\nPara cancelar, es necesario identificar correctamente la reserva correspondiente (no vale con \u201cla que hice hace un tiempo\u201d, por favor us\u00e1 datos concretos).",
+      "name": "faq-cancel-policy",
+      "expected_output": "Las reservas pueden cancelarse sin cargo hasta 12 horas antes del horario reservado. Las cancelaciones con menos de 12 horas pueden tener condiciones especiales.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "\u00bfCu\u00e1les son los horarios del restaurante?",
+      "actual_output": "\u00a1Ah! Los horarios, la base misma de cualquier planeaci\u00f3n gastron\u00f3mica seria. Mir\u00e1, Reino Canino no juega con eso:\n\n**Lunes a Jueves:** 10:00 a 23:00  \n**Viernes, S\u00e1bado y Domingo:** 10:00 a 01:00  \n\nY s\u00ed, los fines de semana se ponen m\u00e1s intensos que una carrera de obst\u00e1culos despu\u00e9s de las 22:00. Si ven\u00eds en esas horas, reserv\u00e1 antes, o termin\u00e1s haciendo cola observando c\u00f3mo otros disfrutan de sus salchichas a la parrilla mientras mastic\u00e1s tu frustraci\u00f3n.  \n\n\u00bfNecesit\u00e1s hacer una reserva? Solo av\u00edsame los detalles y te ayud\u00f3 con eso tambi\u00e9n.",
+      "name": "faq-hours",
+      "expected_output": "Lunes a jueves de 10:00 a 23:00. Viernes, s\u00e1bado y domingo de 10:00 a 01:00.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "faq"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "\u00bfQu\u00e9 platos vegetarianos tienen?",
+      "actual_output": "\u00a1Vaya! Parece que en Reino Canino no tenemos opciones vegetarianas en el men\u00fa actual. \u00bfAcaso cre\u00edas que los perros \u00edbamos a pasar todo el d\u00eda comiendo hierba? \n\nSi est\u00e1s buscando algo para acompa\u00f1ar tu visita, te recomiendo nuestras cl\u00e1sicas **Salchichas de Pavo Real** o el **Filete de Ant\u00edlope con Salsa de Hojas Secas** \u2013 platos que mantendr\u00e1n tu energ\u00eda canina en pico m\u00e1ximo para correr por el parque despu\u00e9s. \n\n\u00bfTe gustar\u00eda ver el men\u00fa completo para elegir tu pr\u00f3ximo fest\u00edn? \ud83d\udc3e",
+      "name": "menu-vegetarian",
+      "expected_output": "Menciona platos vegetarianos reales del men\u00fa. No inventa platos.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "menu"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "Quiero reservar mesa para ma\u00f1ana a las 20:00",
+      "actual_output": "\u00a1Ah! \u00bfAs\u00ed que ya est\u00e1s planeando una cena para ma\u00f1ana a las 20:00? Qu\u00e9 adelantado. Pero antes de que te d\u00e9 la mejor mesa del restaurante, necesito algunos datos para la reserva:\n\n1. **Tu nombre completo** (porque en Reino Canino, hasta los perros tienen etiqueta)\n2. **Tu correo electr\u00f3nico** (para confirmar que no fuiste enga\u00f1ado por otro perro con hambre)\n3. **Cantidad de invitados** (\u00bfvas solo o llev\u00e1s toda la manada?)\n\nCuando me des estos datos, revisar\u00e9 la disponibilidad y te har\u00e9 una reserva digna de un rey de las cachorras. Y te advierto: si no hay lugar, me toca decirle a mi jefe que un humano quiere una mesa... y eso siempre es inc\u00f3modo.",
+      "name": "reservation-incomplete",
+      "expected_output": "Pide nombre, email y cantidad de invitados. No confirma la reserva todav\u00eda.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "reservations"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    },
+    {
+      "input": "\u00bfQui\u00e9n gan\u00f3 el \u00faltimo mundial de f\u00fatbol?",
+      "actual_output": "Lo siento, pero como asistente del restaurante Reino Canino, mi dominio de conocimiento est\u00e1 estrictamente limitado a temas caninos gastron\u00f3micos. Preguntarme sobre f\u00fatbol es como pedirle a un gourmet de carne que te recomiende comida para gatos... \u00a1es una categor\u00eda completamente diferente!\n\nSi en cambio necesitas ayuda para encontrar la mejor mesa para tu grupo de perros o quieres saber qu\u00e9 delicias caninas tenemos hoy en carta, \u00a1estoy a tu disposici\u00f3n! \u00bfTe gustar\u00eda ver el men\u00fa o hacer una reserva para tu pr\u00f3xima cena canina?",
+      "name": "out-of-scope",
+      "expected_output": "Declina el tema y vuelve al restaurante Reino Canino.",
+      "expected_assertion": null,
+      "expected_trajectory": null,
+      "actual_trajectory": null,
+      "metadata": {
+        "category": "scope"
+      },
+      "actual_interactions": null,
+      "expected_interactions": null,
+      "actual_environment_state": null,
+      "expected_environment_state": null,
+      "evaluator": "OutputEvaluator",
+      "evaluator_type": "OutputEvaluator"
+    }
+  ],
+  "test_passes": [
+    true,
+    true,
+    false,
+    true,
+    true
+  ],
+  "reasons": [
+    "The output contains all the key information from the expected output and provides additional details, making it more informative but not incorrect.",
+    "The output provides the correct information about the restaurant hours, despite a different format and additional commentary.",
+    "The output does not mention any real vegetarian dishes from the menu as expected. Instead, it suggests non-vegetarian options.",
+    "The output asks for the user's name, email, and the number of guests, which is in line with the expected output. However, it does not explicitly state that the reservation is not confirmed yet.",
+    "The output declines the topic of football and redirects to the restaurant's domain, but it does so in a more detailed manner than expected. While not exactly as expected, it fulfills the key rule."
+  ],
+  "detailed_results": [
+    [
+      {
+        "score": 0.75,
+        "test_pass": true,
+        "reason": "The output contains all the key information from the expected output and provides additional details, making it more informative but not incorrect.",
+        "label": "Partially correct"
+      }
+    ],
+    [
+      {
+        "score": 0.8,
+        "test_pass": true,
+        "reason": "The output provides the correct information about the restaurant hours, despite a different format and additional commentary.",
+        "label": ""
+      }
+    ],
+    [
+      {
+        "score": 0.1,
+        "test_pass": false,
+        "reason": "The output does not mention any real vegetarian dishes from the menu as expected. Instead, it suggests non-vegetarian options.",
+        "label": "FAIL"
+      }
+    ],
+    [
+      {
+        "score": 0.9,
+        "test_pass": true,
+        "reason": "The output asks for the user's name, email, and the number of guests, which is in line with the expected output. However, it does not explicitly state that the reservation is not confirmed yet.",
+        "label": "almost correct"
+      }
+    ],
+    [
+      {
+        "score": 0.7,
+        "test_pass": true,
+        "reason": "The output declines the topic of football and redirects to the restaurant's domain, but it does so in a more detailed manner than expected. While not exactly as expected, it fulfills the key rule.",
+        "label": "Partially Correct"
+      }
+    ]
+  ],
+  "diagnoses": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "recommendations": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

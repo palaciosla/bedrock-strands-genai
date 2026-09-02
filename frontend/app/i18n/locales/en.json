@@ -58,7 +58,8 @@
     "metrics": "Metrics",
     "prompt": "Prompt",
     "observability": "Observability",
-    "guards": "Guards"
+    "guards": "Guards",
+    "eval": "Eval"
   },
   "backstage": {
     "sqlTitle": "LIVE DATABASE",
@@ -113,7 +114,33 @@
     "inputTokens": "Input tokens",
     "outputTokens": "Output tokens",
     "totalTokens": "Total tokens",
-    "avgLatency": "Avg latency"
+    "avgLatency": "Avg latency",
+    "evalTitle": "EVALUATIONS",
+    "evalBadge": "COMPARE",
+    "evalDescription": "Side-by-side model comparison on real Reino Canino agent scenarios. Each section measures a different quality dimension.",
+    "evalScoreLegend": "Score from 0 to 100. Higher means the model better met the test criteria.",
+    "evalOverallScore": "Average score",
+    "evalPassRate": "Tests passed",
+    "evalPassed": "Passed",
+    "evalFailed": "Failed",
+    "evalLoading": "Loading results…",
+    "evalError": "Could not load evaluations.",
+    "evalEmpty": "No evaluation results yet.",
+    "evalCase": "Scenario",
+    "evalTypeBasicTitle": "Response quality",
+    "evalTypeBasicDesc": "Checks whether the agent's answer meets expectations: correct facts, appropriate behavior, and restaurant rules (policies, menu, reservations).",
+    "evalTypeTrajectoryTitle": "Tool usage",
+    "evalTypeTrajectoryDesc": "Checks whether the agent picks the right tool for each situation (menu lookup, knowledge search, availability check, etc.).",
+    "evalTypeHelpfulnessTitle": "Helpfulness",
+    "evalTypeHelpfulnessDesc": "Checks how useful and complete the answer is for the user, beyond technical rule compliance.",
+    "evalCases": {
+      "faq-cancel-policy": "Cancellation policy",
+      "faq-hours": "Restaurant hours",
+      "menu-vegetarian": "Vegetarian dishes",
+      "reservation-incomplete": "Incomplete reservation",
+      "out-of-scope": "Out-of-scope question",
+      "availability-check": "Availability check"
+    }
   },
   "lang": {
     "switch": "Language",

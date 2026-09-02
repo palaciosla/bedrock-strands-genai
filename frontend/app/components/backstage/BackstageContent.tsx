@@ -19,7 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { BackstageTab, MenuItem, Reservation, SessionMetrics } from "../../lib/types";
+import { BackstageTab, EvalComparison, MenuItem, Reservation, SessionMetrics } from "../../lib/types";
 import { useI18n } from "../../i18n/I18nProvider";
 
 const POLL_INTERVAL_MS = 50000;
@@ -664,6 +664,223 @@ function GuardsTab({ metrics }: { metrics: SessionMetrics }) {
   );
 }
 
+function formatModelLabel(modelId: string): string {
+  if (modelId.includes("nova-2-lite")) return "Nova 2 Lite";
+  if (modelId.includes("nova-lite")) return "Nova Lite";
+  return modelId.replace(/^us\./, "");
+}
+
+function formatScore(score: number | null | undefined): string {
+  if (score === null || score === undefined) return "—";
+  return `${(score * 100).toFixed(0)}%`;
+}
+
+function formatPassRate(rate: number | null | undefined): string {
+  if (rate === null || rate === undefined) return "—";
+  return `${(rate * 100).toFixed(0)}%`;
+}
+
+function evalTypeMeta(
+  type: string,
+  t: ReturnType<typeof useI18n>["t"],
+): { title: string; description: string } {
+  if (type === "basic") {
+    return { title: t.backstage.evalTypeBasicTitle, description: t.backstage.evalTypeBasicDesc };
+  }
+  if (type === "trajectory") {
+    return { title: t.backstage.evalTypeTrajectoryTitle, description: t.backstage.evalTypeTrajectoryDesc };
+  }
+  if (type === "helpfulness") {
+    return { title: t.backstage.evalTypeHelpfulnessTitle, description: t.backstage.evalTypeHelpfulnessDesc };
+  }
+  return { title: type, description: "" };
+}
+
+function EvalScoreCell({
+  score,
+  passed,
+  passedLabel,
+  failedLabel,
+}: {
+  score: number | null | undefined;
+  passed: boolean | null | undefined;
+  passedLabel: string;
+  failedLabel: string;
+}) {
+  if (score === null || score === undefined) {
+    return <span className="text-white/30">—</span>;
+  }
+
+  const tone =
+    passed === true
+      ? "text-emerald-300/90"
+      : passed === false
+        ? "text-amber-300/85"
+        : "text-white/70";
+
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className={`font-semibold tabular-nums ${tone}`}>{formatScore(score)}</span>
+      {passed !== null && passed !== undefined && (
+        <span className={`text-[9px] uppercase tracking-wide ${tone}`}>
+          {passed ? passedLabel : failedLabel}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function EvalTab() {
+  const { t } = useI18n();
+  const [comparisons, setComparisons] = useState<EvalComparison[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const response = await fetch("/api/evals/results");
+        if (!response.ok) {
+          if (!cancelled) setError(true);
+          return;
+        }
+        const data = (await response.json()) as { comparisons: EvalComparison[] };
+        if (!cancelled) setComparisons(data.comparisons ?? []);
+      } catch {
+        if (!cancelled) setError(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const caseLabel = (name: string) =>
+    t.backstage.evalCases[name as keyof typeof t.backstage.evalCases] ?? name.replace(/-/g, " ");
+
+  return (
+    <BackstageCard title={t.backstage.evalTitle} badge={t.backstage.evalBadge}>
+      <p className="mb-2 text-sm text-white/50">{t.backstage.evalDescription}</p>
+      <p className="mb-5 text-xs text-white/35">{t.backstage.evalScoreLegend}</p>
+      {loading && (
+        <p className="font-mono text-xs text-white/35">{t.backstage.evalLoading}</p>
+      )}
+      {error && (
+        <p className="font-mono text-xs text-red-300/80">{t.backstage.evalError}</p>
+      )}
+      {!loading && !error && comparisons.length === 0 && (
+        <p className="font-mono text-xs text-white/35">{t.backstage.evalEmpty}</p>
+      )}
+      {!loading && !error && comparisons.length > 0 && (
+        <div className="space-y-8">
+          {comparisons.map((comparison) => {
+            const meta = evalTypeMeta(comparison.eval_type, t);
+
+            return (
+              <section key={comparison.eval_type} className="space-y-3">
+                <div>
+                  <h3 className="text-sm font-semibold text-white/85">{meta.title}</h3>
+                  <p className="mt-1 max-w-2xl text-xs leading-relaxed text-white/40">
+                    {meta.description}
+                  </p>
+                </div>
+
+                {comparison.model_summaries && comparison.models.length > 0 && (
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {comparison.models.map((modelId) => {
+                      const summary = comparison.model_summaries?.[modelId];
+                      return (
+                        <div
+                          key={modelId}
+                          className="wise-ring rounded-xl bg-black/25 px-3 py-2.5 ring-white/10"
+                        >
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-white/40">
+                            {formatModelLabel(modelId)}
+                          </p>
+                          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px]">
+                            <span className="text-white/70">
+                              {t.backstage.evalOverallScore}:{" "}
+                              <span className="font-semibold text-[var(--wise-mint)]">
+                                {formatScore(summary?.overall_score)}
+                              </span>
+                            </span>
+                            <span className="text-white/70">
+                              {t.backstage.evalPassRate}:{" "}
+                              <span className="font-semibold text-white/85">
+                                {formatPassRate(summary?.pass_rate)}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="wise-ring overflow-x-auto rounded-xl bg-black/25 p-2 ring-white/10">
+                  <table className="w-full min-w-[360px] border-collapse font-mono text-[11px]">
+                    <thead>
+                      <tr className="border-b border-white/10 text-left text-white/40">
+                        <th className="px-2 py-2 font-semibold uppercase tracking-wider">
+                          {t.backstage.evalCase}
+                        </th>
+                        {comparison.models.map((modelId) => (
+                          <th
+                            key={modelId}
+                            className="px-2 py-2 font-semibold uppercase tracking-wider"
+                          >
+                            {formatModelLabel(modelId)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparison.rows.map((row) => (
+                        <tr
+                          key={row.case_name}
+                          className="border-b border-white/5 text-white/70 transition-colors hover:bg-white/5"
+                        >
+                          <td className="max-w-[160px] px-2 py-2.5">
+                            <p className="font-semibold text-white/80">{caseLabel(row.case_name)}</p>
+                            {row.input && (
+                              <p className="mt-0.5 truncate text-[10px] text-white/35" title={row.input}>
+                                {row.input}
+                              </p>
+                            )}
+                          </td>
+                          {comparison.models.map((modelId) => {
+                            const cell = row.by_model[modelId];
+                            return (
+                              <td key={modelId} className="px-2 py-2.5 align-top">
+                                <EvalScoreCell
+                                  score={cell?.score}
+                                  passed={cell?.passed}
+                                  passedLabel={t.backstage.evalPassed}
+                                  failedLabel={t.backstage.evalFailed}
+                                />
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
+    </BackstageCard>
+  );
+}
+
 export function BackstageContent({
   activeTab,
   metrics,
@@ -684,6 +901,8 @@ export function BackstageContent({
       return <ObservabilityTab metrics={metrics} />;
     case "guards":
       return <GuardsTab metrics={metrics} />;
+    case "eval":
+      return <EvalTab />;
     default:
       return null;
   }
