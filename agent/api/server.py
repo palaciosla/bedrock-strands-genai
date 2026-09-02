@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from strands import Agent
@@ -21,15 +21,25 @@ from agent.db.main import supabase
 from agent.guardrails.service import GuardrailsService
 from agent.hooks.guardrails_info import GUARDRAIL_ASSESSMENTS_KEY, GuardrailsInfoHook
 from agent.eval.load_results import load_eval_results
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
 
-origins = ["http://localhost:9000", "http://localhost:3000"]
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-model_id = "amazon.nova-lite-v1:0"
+
+origins = os.environ.get("CORS_ORIGINS").split(",")
+
+model_id = os.environ.get("MODEL_ID")
 region_name = os.environ.get("AWS_REGION")
 guardrail_id = os.environ.get("GUARDRAIL_ID", "").strip('"')
 guardrail_version = os.environ.get("GUARDRAIL_VERSION", "").strip('"')
@@ -43,7 +53,6 @@ available_tools = [
 
 guardrails_service: GuardrailsService | None = None
 guardrails_hook: GuardrailsInfoHook | None = None
-
 
 
 if guardrail_id and guardrail_version and region_name:
@@ -144,14 +153,26 @@ class ChatResponse(BaseModel):
     guardrail_intervened: bool = False
     guardrail_assessments: list[dict] | None = None
 
+
+@app.middleware("http")
+async def check_api_key(request: Request, call_next):
+    api_key = request.headers.get("x-api-key")
+    if api_key != os.environ.get("CHAT_API_KEY"):
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    return await call_next(request)
+
+
 @app.get("/guardrails/config")
-async def get_guardrails_config():
+@limiter.limit("10/minute")
+async def get_guardrails_config(request: Request):
     if not guardrails_service:
         raise HTTPException(status_code=503, detail="Guardrails not configured")
     return {"config": guardrails_service.get_configuration()}
 
+
 @app.get("/reservations")
-async def list_reservations(session_id: str):
+@limiter.limit("10/minute")
+async def list_reservations(request: Request, session_id: str):
     response = (
         supabase.table("reservations")
         .select("*")
@@ -163,7 +184,8 @@ async def list_reservations(session_id: str):
 
 
 @app.get("/menu")
-async def list_menu():
+@limiter.limit("10/minute")
+async def list_menu(request: Request):
     response = supabase.table("menu_items").select("*").order("category").execute()
     return {"items": response.data}
 
@@ -174,18 +196,19 @@ async def get_eval_results():
 
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    agent = get_or_create_agent(request.session_id)
+@limiter.limit("10/minute")
+async def chat(request: Request, body: ChatRequest):
+    agent = get_or_create_agent(body.session_id)
     _repair_agent_history(agent)
     latency_before = agent.event_loop_metrics.accumulated_metrics["latencyMs"]
     invocation_state: dict = {
-        "session_id": request.session_id,
+        "session_id": body.session_id,
         "today_date": date.today().isoformat(),
         "tomorrow_date": (date.today() + timedelta(days=1)).isoformat(),
     }
 
     result = agent(
-        f"{request.message}\n\n{_reservation_context()}",
+        f"{body.message}\n\n{_reservation_context()}",
         invocation_state=invocation_state,
     )
 
@@ -202,9 +225,11 @@ async def chat(request: ChatRequest):
     raw_text = message["content"][0]["text"]
 
     if result.stop_reason == "guardrail_intervened":
-        raw_text = "Content was blocked by guardrails, conversation context overwritten!"
-        sessions.pop(request.session_id, None)
-        session_prompt_versions.pop(request.session_id, None)
+        raw_text = (
+            "Content was blocked by guardrails, conversation context overwritten!"
+        )
+        sessions.pop(body.session_id, None)
+        session_prompt_versions.pop(body.session_id, None)
 
     assessments = invocation_state.get(GUARDRAIL_ASSESSMENTS_KEY)
 
@@ -222,7 +247,7 @@ async def chat(request: ChatRequest):
 
     return ChatResponse(
         response=strip_thinking(raw_text),
-        session_id=request.session_id,
+        session_id=body.session_id,
         input_tokens=usage["inputTokens"],
         output_tokens=usage["outputTokens"],
         total_tokens=usage["totalTokens"],

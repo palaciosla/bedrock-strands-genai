@@ -9,6 +9,11 @@ export async function GET(request: Request): Promise<Response> {
   try {
     const response = await fetch(
       `${process.env.APP_API_URL}/reservations?session_id=${encodeURIComponent(sessionId)}`,
+      {
+        headers: {
+          "x-api-key": process.env.CHAT_API_KEY || "",
+        },
+      },
     );
 
     if (!response.ok) {

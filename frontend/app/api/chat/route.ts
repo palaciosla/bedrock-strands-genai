@@ -4,10 +4,13 @@ export async function POST(request: Request): Promise<Response> {
         return new Response("Message and sessionId are required", { status: 400 });
     }
     try {
+        const apiKey = process.env.CHAT_API_KEY || "";
+        if(!apiKey || apiKey === '') throw new Error("CHAT_API_KEY is not set");
         const response = await fetch(`${process.env.APP_API_URL}/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "x-api-key": apiKey,
             },
             body: JSON.stringify({ message, session_id: sessionId }),
         });

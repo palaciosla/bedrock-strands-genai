@@ -1,6 +1,10 @@
 export async function GET(): Promise<Response> {
   try {
-    const response = await fetch(`${process.env.APP_API_URL}/eval/results`);
+    const response = await fetch(`${process.env.APP_API_URL}/eval/results`, {
+      headers: {
+        "x-api-key": process.env.CHAT_API_KEY || "",
+      },
+    });
 
     if (!response.ok) {
       return new Response("Failed to fetch eval results", { status: response.status });
