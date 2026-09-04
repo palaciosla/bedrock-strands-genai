@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   CalendarDays,
   ChevronDown,
+  FileText,
   ShieldAlert,
   UtensilsCrossed,
 } from "lucide-react";
@@ -23,6 +24,15 @@ import { BackstageTab, EvalComparison, MenuItem, Reservation, SessionMetrics } f
 import { useI18n } from "../../i18n/I18nProvider";
 
 const POLL_INTERVAL_MS = 50000;
+
+type PromptConfig = {
+  source?: "bedrock" | "local";
+  name?: string | null;
+  version?: string | null;
+  templateType?: string | null;
+  variables?: string[];
+  updatedAt?: string | null;
+};
 
 type GuardrailConfig = {
   name?: string;
@@ -474,22 +484,88 @@ function MetricsTab({ metrics }: { metrics: SessionMetrics }) {
 }
 
 function PromptTab() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [config, setConfig] = useState<PromptConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadConfig() {
+      try {
+        const response = await fetch("/api/prompt");
+        if (!response.ok) {
+          if (!cancelled) setError(true);
+          return;
+        }
+        const data = (await response.json()) as { config: PromptConfig };
+        if (!cancelled) setConfig(data.config);
+      } catch {
+        if (!cancelled) setError(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void loadConfig();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const fromBedrock = config?.source === "bedrock";
+  const badge = fromBedrock
+    ? t.backstage.promptBadgeBedrock.replace("{{version}}", config?.version ?? "—")
+    : t.backstage.promptBadge;
+  const note = error
+    ? t.backstage.promptLoadError
+    : loading
+      ? t.backstage.promptLoading
+      : fromBedrock
+        ? t.backstage.promptNoteBedrock
+        : t.backstage.promptNote;
+  const updatedLabel = config?.updatedAt
+    ? new Date(config.updatedAt).toLocaleString(locale === "en" ? "en-US" : "es-AR", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
+    : "—";
+
+  const rows = [
+    { label: t.backstage.promptName, value: config?.name ?? "—" },
+    { label: t.backstage.promptVersion, value: config?.version ?? "—" },
+    { label: t.backstage.promptTemplateType, value: config?.templateType ?? "—" },
+    {
+      label: t.backstage.promptVariables,
+      value: config?.variables?.length ? config.variables.join(", ") : "—",
+    },
+    { label: t.backstage.promptUpdated, value: updatedLabel },
+  ];
 
   return (
-    <BackstageCard
-      title={t.backstage.promptTitle}
-      badge={t.backstage.promptBadge}
-    >
-      <div className="space-y-3 text-sm font-medium text-white/70">
-        <p>
-          <span className="text-white/45">{t.backstage.promptVersion}:</span>{" "}
-          <span className="font-mono text-white">{t.backstage.promptVersionValue}</span>
-        </p>
-        <div className="wise-ring rounded-2xl bg-black/25 p-3 font-mono text-xs leading-6 text-white/55 ring-white/10">
-          Chila · Reino Canino · Strands Agent · tools: {t.backstage.promptTools}
+    <BackstageCard title={t.backstage.promptTitle} badge={badge}>
+      <div className="flex items-start gap-3">
+        <FileText
+          className="mt-0.5 size-4 shrink-0 text-[var(--wise-green)]"
+          aria-hidden
+        />
+        <div className="min-w-0 flex-1 space-y-3 text-sm font-medium text-white/70">
+          <p className="text-white/55">{note}</p>
+          {config && (
+            <div className="space-y-2 font-mono text-xs">
+              {rows.map((row) => (
+                <p key={row.label}>
+                  <span className="text-white/45">{row.label}:</span>{" "}
+                  <span className="text-white">{row.value}</span>
+                </p>
+              ))}
+            </div>
+          )}
+          <div className="wise-ring rounded-2xl bg-black/25 p-3 font-mono text-xs leading-6 text-white/55 ring-white/10">
+            Chila · Reino Canino · Strands Agent · tools: {t.backstage.promptTools}
+          </div>
         </div>
-        <p className="text-white/45">{t.backstage.promptNote}</p>
       </div>
     </BackstageCard>
   );

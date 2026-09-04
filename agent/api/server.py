@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from strands import Agent
 from strands.models import BedrockModel
 from datetime import date, timedelta
+import boto3
 import json
 import os
 
@@ -73,15 +74,46 @@ app.add_middleware(
 
 sessions: dict[str, Agent] = {}
 session_prompt_versions: dict[str, str] = {}
-PROMPT_VERSION = "reservations-v4"
+prompt_id = os.environ.get("PROMPT_ID", "").strip().strip('"')
+prompt_version = os.environ.get("PROMPT_VERSION", "").strip().strip('"')
+prompt_config: dict = {
+    "source": "local",
+    "name": "system_prompt.py",
+    "version": "local",
+    "templateType": "TEXT",
+    "variables": ["today_date", "tomorrow_date", "weekday_calendar"],
+    "updatedAt": None,
+}
+if prompt_id:
+    raw = boto3.client("bedrock-agent", region_name=region_name).get_prompt(
+        promptIdentifier=prompt_id,
+        promptVersion=prompt_version,
+    )
+    variant = raw["variants"][0]
+    text_cfg = variant["templateConfiguration"]["text"]
+    SYSTEM_PROMPT = text_cfg["text"]
+    updated = raw.get("updatedAt")
+    prompt_config = {
+        "source": "bedrock",
+        "name": raw.get("name"),
+        "version": str(raw.get("version")),
+        "templateType": variant.get("templateType"),
+        "variables": [
+            item["name"]
+            for item in (text_cfg.get("inputVariables") or [])
+            if item.get("name")
+        ],
+        "updatedAt": updated.isoformat() if hasattr(updated, "isoformat") else updated,
+    }
 
 
 def _system_prompt() -> str:
     today = date.today()
-    return SYSTEM_PROMPT.format(
-        today_date=today.isoformat(),
-        tomorrow_date=(today + timedelta(days=1)).isoformat(),
-        weekday_calendar=format_calendar_context(today),
+    return (
+        SYSTEM_PROMPT
+        .replace("{{today_date}}", today.isoformat())
+        .replace("{{tomorrow_date}}", (today + timedelta(days=1)).isoformat())
+        .replace("{{weekday_calendar}}", format_calendar_context(today))
     )
 
 
@@ -112,7 +144,7 @@ def _repair_agent_history(agent: Agent) -> None:
 
 
 def get_or_create_agent(session_id: str) -> Agent:
-    if session_prompt_versions.get(session_id) != PROMPT_VERSION:
+    if session_prompt_versions.get(session_id) != prompt_version:
         sessions.pop(session_id, None)
 
     if session_id not in sessions:
@@ -131,7 +163,7 @@ def get_or_create_agent(session_id: str) -> Agent:
             system_prompt=_system_prompt(),
             hooks=hooks,
         )
-        session_prompt_versions[session_id] = PROMPT_VERSION
+        session_prompt_versions[session_id] = prompt_version
     return sessions[session_id]
 
 
@@ -160,6 +192,12 @@ async def check_api_key(request: Request, call_next):
     if api_key != os.environ.get("CHAT_API_KEY"):
         raise HTTPException(status_code=401, detail="Invalid API key")
     return await call_next(request)
+
+
+@app.get("/prompt/config")
+@limiter.limit("10/minute")
+async def get_prompt_config(request: Request):
+    return {"config": prompt_config}
 
 
 @app.get("/guardrails/config")
