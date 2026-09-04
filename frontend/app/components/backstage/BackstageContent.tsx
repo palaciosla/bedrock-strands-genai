@@ -9,21 +9,20 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { BackstageTab, EvalComparison, MenuItem, Reservation, SessionMetrics } from "../../lib/types";
+import {
+  BackstageTab,
+  EvalComparison,
+  MenuItem,
+  Reservation,
+  SessionMetrics,
+} from "../../lib/types";
 import { useI18n } from "../../i18n/I18nProvider";
-
-const POLL_INTERVAL_MS = 50000;
 
 type PromptConfig = {
   source?: "bedrock" | "local";
@@ -94,9 +93,7 @@ function DataTable({
   emptyLabel: string;
 }) {
   if (rows.length === 0) {
-    return (
-      <p className="py-3 font-mono text-xs text-white/35">{emptyLabel}</p>
-    );
+    return <p className="py-3 font-mono text-xs text-white/35">{emptyLabel}</p>;
   }
 
   return (
@@ -105,7 +102,10 @@ function DataTable({
         <thead>
           <tr className="border-b border-white/10 text-left text-white/40">
             {columns.map((col) => (
-              <th key={col.key} className="px-2 py-2 font-semibold uppercase tracking-wider">
+              <th
+                key={col.key}
+                className="px-2 py-2 font-semibold uppercase tracking-wider"
+              >
                 {col.label}
               </th>
             ))}
@@ -206,14 +206,19 @@ function SqlTableAccordion({
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
                     <span className="font-mono text-[10px] text-white/35">
-                      {t.backstage.sqlRowCount.replace("{count}", String(count))}
+                      {t.backstage.sqlRowCount.replace(
+                        "{count}",
+                        String(count),
+                      )}
                     </span>
                     <Badge className="rounded-full border-0 bg-primary/20 text-[10px] font-semibold uppercase tracking-wide text-[var(--wise-green)] hover:bg-primary/20">
                       {tag}
                     </Badge>
                   </div>
                 </div>
-                <p className="mt-1 font-mono text-xs text-white/45">{description}</p>
+                <p className="mt-1 font-mono text-xs text-white/45">
+                  {description}
+                </p>
                 {sessionScoped && (
                   <p className="mt-1 font-mono text-[10px] text-[var(--wise-green)]/70">
                     {t.backstage.sqlSessionFilter}
@@ -302,48 +307,52 @@ function MenuFilters({
   );
 }
 
-function SqlTab({ sessionId }: { sessionId: string }) {
+function SqlTab({
+  sessionId,
+  refetchSql,
+}: {
+  sessionId: string;
+  refetchSql: number;
+}) {
   const { t } = useI18n();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [reservationsOpen, setReservationsOpen] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [dietaryFilter, setDietaryFilter] = useState<string | null>(null);
   const [availableOnly, setAvailableOnly] = useState(false);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [menuRes, reservationsRes] = await Promise.all([
-        fetch("/api/menu"),
-        fetch(`/api/reservations?sessionId=${encodeURIComponent(sessionId)}`),
-      ]);
-
-      if (!menuRes.ok || !reservationsRes.ok) {
-        setError(true);
-        return;
-      }
-
-      const menuData = await menuRes.json();
-      const reservationsData = await reservationsRes.json();
-
-      setMenuItems(menuData.items ?? []);
-      setReservations(reservationsData.reservations ?? []);
-      setError(false);
-    } catch {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [sessionId]);
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [menuRes, reservationsRes] = await Promise.all([
+          fetch("/api/menu"),
+          fetch(`/api/reservations?sessionId=${encodeURIComponent(sessionId)}`),
+        ]);
+
+        if (!menuRes.ok || !reservationsRes.ok) {
+          setError(true);
+          return;
+        }
+
+        const menuData = await menuRes.json();
+        const reservationsData = await reservationsRes.json();
+
+        setMenuItems(menuData.items ?? []);
+        setReservations(reservationsData.reservations ?? []);
+        setError(false);
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-    const interval = setInterval(fetchData, POLL_INTERVAL_MS);
-    return () => clearInterval(interval);
-  }, [fetchData]);
+  }, [refetchSql, sessionId]);
 
   const menuCategories = useMemo(
     () => [...new Set(menuItems.map((item) => item.category))].sort(),
@@ -390,11 +399,34 @@ function SqlTab({ sessionId }: { sessionId: string }) {
       </div>
 
       {loading && (
-        <p className="font-mono text-xs text-white/35">{t.backstage.sqlLoading}</p>
+        <p className="font-mono text-xs text-white/35">
+          {t.backstage.sqlLoading}
+        </p>
       )}
       {error && (
-        <p className="font-mono text-xs text-red-400/80">{t.backstage.sqlError}</p>
+        <p className="font-mono text-xs text-red-400/80">
+          {t.backstage.sqlError}
+        </p>
       )}
+
+      <SqlTableAccordion
+        icon={CalendarDays}
+        name={t.backstage.tables.reservations}
+        description={t.backstage.tables.reservationsDescription}
+        tag={t.backstage.sqlReadWrite}
+        count={reservations.length}
+        sessionScoped
+        open={reservationsOpen}
+        onOpenChange={setReservationsOpen}
+      >
+        <div className="wise-ring rounded-xl bg-black/25 p-2 ring-white/10">
+          <DataTable
+            columns={reservationColumns}
+            rows={reservations as unknown as Record<string, unknown>[]}
+            emptyLabel={t.backstage.sqlEmpty}
+          />
+        </div>
+      </SqlTableAccordion>
 
       <SqlTableAccordion
         icon={UtensilsCrossed}
@@ -418,25 +450,6 @@ function SqlTab({ sessionId }: { sessionId: string }) {
           <DataTable
             columns={menuColumns}
             rows={filteredMenuItems as unknown as Record<string, unknown>[]}
-            emptyLabel={t.backstage.sqlEmpty}
-          />
-        </div>
-      </SqlTableAccordion>
-
-      <SqlTableAccordion
-        icon={CalendarDays}
-        name={t.backstage.tables.reservations}
-        description={t.backstage.tables.reservationsDescription}
-        tag={t.backstage.sqlReadWrite}
-        count={reservations.length}
-        sessionScoped
-        open={reservationsOpen}
-        onOpenChange={setReservationsOpen}
-      >
-        <div className="wise-ring rounded-xl bg-black/25 p-2 ring-white/10">
-          <DataTable
-            columns={reservationColumns}
-            rows={reservations as unknown as Record<string, unknown>[]}
             emptyLabel={t.backstage.sqlEmpty}
           />
         </div>
@@ -516,7 +529,10 @@ function PromptTab() {
 
   const fromBedrock = config?.source === "bedrock";
   const badge = fromBedrock
-    ? t.backstage.promptBadgeBedrock.replace("{{version}}", config?.version ?? "—")
+    ? t.backstage.promptBadgeBedrock.replace(
+        "{{version}}",
+        config?.version ?? "—",
+      )
     : t.backstage.promptBadge;
   const note = error
     ? t.backstage.promptLoadError
@@ -526,16 +542,22 @@ function PromptTab() {
         ? t.backstage.promptNoteBedrock
         : t.backstage.promptNote;
   const updatedLabel = config?.updatedAt
-    ? new Date(config.updatedAt).toLocaleString(locale === "en" ? "en-US" : "es-AR", {
-        dateStyle: "medium",
-        timeStyle: "short",
-      })
+    ? new Date(config.updatedAt).toLocaleString(
+        locale === "en" ? "en-US" : "es-AR",
+        {
+          dateStyle: "medium",
+          timeStyle: "short",
+        },
+      )
     : "—";
 
   const rows = [
     { label: t.backstage.promptName, value: config?.name ?? "—" },
     { label: t.backstage.promptVersion, value: config?.version ?? "—" },
-    { label: t.backstage.promptTemplateType, value: config?.templateType ?? "—" },
+    {
+      label: t.backstage.promptTemplateType,
+      value: config?.templateType ?? "—",
+    },
     {
       label: t.backstage.promptVariables,
       value: config?.variables?.length ? config.variables.join(", ") : "—",
@@ -563,7 +585,8 @@ function PromptTab() {
             </div>
           )}
           <div className="wise-ring rounded-2xl bg-black/25 p-3 font-mono text-xs leading-6 text-white/55 ring-white/10">
-            Chila · Reino Canino · Strands Agent · tools: {t.backstage.promptTools}
+            Chila · Reino Canino · Strands Agent · tools:{" "}
+            {t.backstage.promptTools}
           </div>
         </div>
       </div>
@@ -646,7 +669,9 @@ function GuardsTab({ metrics }: { metrics: SessionMetrics }) {
         `${entity.type} (in: ${entity.inputAction ?? "—"}, out: ${entity.outputAction ?? "—"})`,
     ) ?? [];
 
-  const badge = config ? t.backstage.guardsBadgeConfigured : t.backstage.guardsBadge;
+  const badge = config
+    ? t.backstage.guardsBadgeConfigured
+    : t.backstage.guardsBadge;
   const note = config
     ? t.backstage.guardsConfiguredNote
     : error
@@ -719,14 +744,19 @@ function GuardsTab({ metrics }: { metrics: SessionMetrics }) {
                         ? t.backstage.guardsIntervened
                         : t.backstage.guardsNotIntervened}
                     </p>
-                    {metrics.lastGuardrailAssessments.map((assessment, index) => (
-                      <p key={`${assessment.source ?? "assessment"}-${index}`}>
-                        • {assessment.source ?? "—"}: {assessment.action ?? assessment.error ?? "—"}
-                        {assessment.actionReason
-                          ? ` — ${assessment.actionReason}`
-                          : ""}
-                      </p>
-                    ))}
+                    {metrics.lastGuardrailAssessments.map(
+                      (assessment, index) => (
+                        <p
+                          key={`${assessment.source ?? "assessment"}-${index}`}
+                        >
+                          • {assessment.source ?? "—"}:{" "}
+                          {assessment.action ?? assessment.error ?? "—"}
+                          {assessment.actionReason
+                            ? ` — ${assessment.actionReason}`
+                            : ""}
+                        </p>
+                      ),
+                    )}
                   </div>
                 ) : (
                   <p>• {t.backstage.guardsNoAssessments}</p>
@@ -761,13 +791,22 @@ function evalTypeMeta(
   t: ReturnType<typeof useI18n>["t"],
 ): { title: string; description: string } {
   if (type === "basic") {
-    return { title: t.backstage.evalTypeBasicTitle, description: t.backstage.evalTypeBasicDesc };
+    return {
+      title: t.backstage.evalTypeBasicTitle,
+      description: t.backstage.evalTypeBasicDesc,
+    };
   }
   if (type === "trajectory") {
-    return { title: t.backstage.evalTypeTrajectoryTitle, description: t.backstage.evalTypeTrajectoryDesc };
+    return {
+      title: t.backstage.evalTypeTrajectoryTitle,
+      description: t.backstage.evalTypeTrajectoryDesc,
+    };
   }
   if (type === "helpfulness") {
-    return { title: t.backstage.evalTypeHelpfulnessTitle, description: t.backstage.evalTypeHelpfulnessDesc };
+    return {
+      title: t.backstage.evalTypeHelpfulnessTitle,
+      description: t.backstage.evalTypeHelpfulnessDesc,
+    };
   }
   return { title: type, description: "" };
 }
@@ -796,7 +835,9 @@ function EvalScoreCell({
 
   return (
     <div className="flex flex-col gap-0.5">
-      <span className={`font-semibold tabular-nums ${tone}`}>{formatScore(score)}</span>
+      <span className={`font-semibold tabular-nums ${tone}`}>
+        {formatScore(score)}
+      </span>
       {passed !== null && passed !== undefined && (
         <span className={`text-[9px] uppercase tracking-wide ${tone}`}>
           {passed ? passedLabel : failedLabel}
@@ -822,7 +863,9 @@ function EvalTab() {
           if (!cancelled) setError(true);
           return;
         }
-        const data = (await response.json()) as { comparisons: EvalComparison[] };
+        const data = (await response.json()) as {
+          comparisons: EvalComparison[];
+        };
         if (!cancelled) setComparisons(data.comparisons ?? []);
       } catch {
         if (!cancelled) setError(true);
@@ -838,20 +881,31 @@ function EvalTab() {
   }, []);
 
   const caseLabel = (name: string) =>
-    t.backstage.evalCases[name as keyof typeof t.backstage.evalCases] ?? name.replace(/-/g, " ");
+    t.backstage.evalCases[name as keyof typeof t.backstage.evalCases] ??
+    name.replace(/-/g, " ");
 
   return (
     <BackstageCard title={t.backstage.evalTitle} badge={t.backstage.evalBadge}>
-      <p className="mb-2 text-sm text-white/50">{t.backstage.evalDescription}</p>
-      <p className="mb-5 text-xs text-white/35">{t.backstage.evalScoreLegend}</p>
+      <p className="mb-2 text-sm text-white/50">
+        {t.backstage.evalDescription}
+      </p>
+      <p className="mb-5 text-xs text-white/35">
+        {t.backstage.evalScoreLegend}
+      </p>
       {loading && (
-        <p className="font-mono text-xs text-white/35">{t.backstage.evalLoading}</p>
+        <p className="font-mono text-xs text-white/35">
+          {t.backstage.evalLoading}
+        </p>
       )}
       {error && (
-        <p className="font-mono text-xs text-red-300/80">{t.backstage.evalError}</p>
+        <p className="font-mono text-xs text-red-300/80">
+          {t.backstage.evalError}
+        </p>
       )}
       {!loading && !error && comparisons.length === 0 && (
-        <p className="font-mono text-xs text-white/35">{t.backstage.evalEmpty}</p>
+        <p className="font-mono text-xs text-white/35">
+          {t.backstage.evalEmpty}
+        </p>
       )}
       {!loading && !error && comparisons.length > 0 && (
         <div className="space-y-8">
@@ -861,7 +915,9 @@ function EvalTab() {
             return (
               <section key={comparison.eval_type} className="space-y-3">
                 <div>
-                  <h3 className="text-sm font-semibold text-white/85">{meta.title}</h3>
+                  <h3 className="text-sm font-semibold text-white/85">
+                    {meta.title}
+                  </h3>
                   <p className="mt-1 max-w-2xl text-xs leading-relaxed text-white/40">
                     {meta.description}
                   </p>
@@ -923,9 +979,14 @@ function EvalTab() {
                           className="border-b border-white/5 text-white/70 transition-colors hover:bg-white/5"
                         >
                           <td className="max-w-[160px] px-2 py-2.5">
-                            <p className="font-semibold text-white/80">{caseLabel(row.case_name)}</p>
+                            <p className="font-semibold text-white/80">
+                              {caseLabel(row.case_name)}
+                            </p>
                             {row.input && (
-                              <p className="mt-0.5 truncate text-[10px] text-white/35" title={row.input}>
+                              <p
+                                className="mt-0.5 truncate text-[10px] text-white/35"
+                                title={row.input}
+                              >
                                 {row.input}
                               </p>
                             )}
@@ -933,7 +994,10 @@ function EvalTab() {
                           {comparison.models.map((modelId) => {
                             const cell = row.by_model[modelId];
                             return (
-                              <td key={modelId} className="px-2 py-2.5 align-top">
+                              <td
+                                key={modelId}
+                                className="px-2 py-2.5 align-top"
+                              >
                                 <EvalScoreCell
                                   score={cell?.score}
                                   passed={cell?.passed}
@@ -961,14 +1025,16 @@ export function BackstageContent({
   activeTab,
   metrics,
   sessionId,
+  refetchSql,
 }: {
   activeTab: BackstageTab;
   metrics: SessionMetrics;
   sessionId: string;
+  refetchSql: number;
 }) {
   switch (activeTab) {
     case "sql":
-      return <SqlTab sessionId={sessionId} />;
+      return <SqlTab sessionId={sessionId} refetchSql={refetchSql} />;
     case "metrics":
       return <MetricsTab metrics={metrics} />;
     case "prompt":

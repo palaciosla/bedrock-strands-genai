@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useI18n } from "../../i18n/I18nProvider";
 import { ChatMessage, MessageDetails } from "../../lib/types";
+import Markdown from "react-markdown";
 
 function AgentAvatar() {
   return (
@@ -155,7 +156,7 @@ export function MessageList({
                   : "wise-ring rounded-[1.875rem] rounded-bl-md bg-[var(--agent-bubble)] text-foreground",
               )}
             >
-              {message.content}
+              <Markdown>{message.content}</Markdown>
               <MessageMeta details={message.details} role={message.role} />
             </div>
             {message.role === "user" && <UserAvatar />}

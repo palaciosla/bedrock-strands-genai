@@ -27,6 +27,7 @@ function HomeContent() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [metrics, setMetrics] = useState<SessionMetrics>(INITIAL_METRICS);
+  const [refetchSql, setRefetchSql] = useState(0);
   const sessionId = useMemo(() => getSessionId(), []);
 
   const onSend = useCallback(
@@ -48,6 +49,10 @@ function HomeContent() {
 
         const data: ChatApiResponse = await response.json();
         const messageDetails = normalizedMessageDetails(data);
+
+        if(data.tools_used.includes("create_reservation")) {
+          setRefetchSql((prev) => prev + 1);
+        }
 
         setMessages((prev) => {
           const updated = [...prev];
@@ -89,7 +94,7 @@ function HomeContent() {
       chat={
         <ChatPanel messages={messages} isLoading={isLoading} onSend={onSend} />
       }
-      backstage={<BackstagePanel metrics={metrics} sessionId={sessionId} />}
+      backstage={<BackstagePanel metrics={metrics} sessionId={sessionId} refetchSql={refetchSql} />}
     />
   );
 }

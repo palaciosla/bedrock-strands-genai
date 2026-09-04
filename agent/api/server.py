@@ -123,7 +123,6 @@ def _reservation_context() -> str:
     return (
         f"[Contexto: hoy={today.isoformat()} ({WEEKDAY_NAMES_ES[today.weekday()]}). "
         f"Calendario próximos días: {calendar}. "
-        "Las tools de reserva aceptan hoy, mañana, el viernes, in 3 days, YYYY-MM-DD y horas como 8pm. "
         "Pasá la frase de fecha del usuario tal cual a la tool.]"
     )
 
@@ -155,6 +154,10 @@ def get_or_create_agent(session_id: str) -> Agent:
             guardrail_id=guardrail_id,
             guardrail_version=guardrail_version,
             guardrail_trace="enabled",
+            guardrail_redact_input=False,
+            temperature=1,
+            topP=0.8,
+            maxTokens=4096,
         )
 
         sessions[session_id] = Agent(
@@ -262,12 +265,12 @@ async def chat(request: Request, body: ChatRequest):
     message = result.message
     raw_text = message["content"][0]["text"]
 
-    if result.stop_reason == "guardrail_intervened":
-        raw_text = (
-            "Content was blocked by guardrails, conversation context overwritten!"
-        )
-        sessions.pop(body.session_id, None)
-        session_prompt_versions.pop(body.session_id, None)
+    # if result.stop_reason == "guardrail_intervened":
+    #     raw_text = (
+    #         "Content was blocked by guardrails, conversation context overwritten!"
+    #     )
+    #     sessions.pop(body.session_id, None)
+    #     session_prompt_versions.pop(body.session_id, None)
 
     assessments = invocation_state.get(GUARDRAIL_ASSESSMENTS_KEY)
 

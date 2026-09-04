@@ -11,9 +11,11 @@ import { Badge } from "@/components/ui/badge";
 export function BackstagePanel({
   metrics,
   sessionId,
+  refetchSql,
 }: {
   metrics: SessionMetrics;
   sessionId: string;
+  refetchSql: number;
 }) {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<BackstageTab>("sql");
@@ -42,10 +44,10 @@ export function BackstagePanel({
         </div>
       </header>
 
-      <BackstageTabs active={activeTab} onChange={setActiveTab} />
+      <BackstageTabs active={activeTab} onChange={setActiveTab}  />
 
       <div className="flex-1 overflow-y-auto px-6 py-5">
-        <BackstageContent activeTab={activeTab} metrics={metrics} sessionId={sessionId} />
+        <BackstageContent activeTab={activeTab} metrics={metrics} sessionId={sessionId} refetchSql={refetchSql} />
       </div>
     </div>
   );
